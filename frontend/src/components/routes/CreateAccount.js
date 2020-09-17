@@ -14,6 +14,7 @@ class CreateAccountForm extends Component {
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.loginUser = this.loginUser.bind(this);
   }
 
   handleSubmit(event) {
@@ -31,7 +32,40 @@ class CreateAccountForm extends Component {
         password: this.state.password
       })
     };
-    fetch("api/account/", requestOptions);
+    fetch("api/account/", requestOptions)
+      .then(response => {
+        if (response.status > 400) {
+          alert('Account Creation Failed')
+          return
+        };
+        this.loginUser();
+      });
+  }
+
+  loginUser() {
+    const requestOptions = {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
+    };
+    fetch("api/token/", requestOptions)
+      .then(response => {
+        if (response.status > 400) {
+          alert('Wrong email/password')
+        };
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        window.localStorage.setItem('access', data.access);
+        window.localStorage.setItem('refresh', data.refresh);
+        this.props.history.push('/home');
+      })
   }
 
   render() {
