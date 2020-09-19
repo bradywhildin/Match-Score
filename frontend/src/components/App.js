@@ -2,19 +2,19 @@ import React, { Suspense, lazy } from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-// const Home = lazy(() => import('./routes/Home'));
-// const Login = lazy(() => import('./routes/Login'));
 import Home from './routes/Home'
 import Login from './routes/Login'
 import CreateAccount from './routes/CreateAccount'
+import Profile from './routes/Profile'
 
 function App() {
   return (
     <Router>
       <Switch>
-        <Route path='/createAccount' component={CreateAccount} />
+        <Route path='/create-account' component={CreateAccount} />
         <Route path='/login' component={Login} />
         <Route path='/home' component={Home} />
+        <Route path='/profile' component={Profile} />
       </Switch>
     </Router>
   );

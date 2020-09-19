@@ -15,7 +15,7 @@ class Home extends Component {
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
     }
-    fetch("api/account/", requestOptions)
+    fetch("api/account/get-users", requestOptions)
       .then(response => {
         if (response.status > 400) {
           this.setState({
@@ -26,6 +26,7 @@ class Home extends Component {
         return response.json();
       })
       .then(data => {
+        console.log(data);
         this.setState(() => {
           return {
             data,
@@ -37,15 +38,15 @@ class Home extends Component {
 
   render() {
     return (
-      <ul>
-        {this.state.data.map(user => {
-          return (
-            <li key={user.id}>
-              {user.username}
-            </li>
-          );
-        })}
-      </ul>
+        <ul>
+          {this.state.data.map(user => {
+            return (
+              <li key={user.id}>
+                {user.first_name} - {user.bio}
+              </li>
+            );
+          })}
+        </ul>
     );
   }
 }

@@ -32,7 +32,7 @@ class CreateAccountForm extends Component {
         password: this.state.password
       })
     };
-    fetch("api/account/", requestOptions)
+    fetch("api/account/create-user", requestOptions)
       .then(response => {
         if (response.status > 400) {
           alert('Account Creation Failed')
@@ -55,9 +55,6 @@ class CreateAccountForm extends Component {
     };
     fetch("api/token/", requestOptions)
       .then(response => {
-        if (response.status > 400) {
-          alert('Wrong email/password')
-        };
         return response.json();
       })
       .then(data => {
