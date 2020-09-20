@@ -7,4 +7,4 @@ db.sqlite3
 media
 env/
 .coverage
-frontend/node_modules/*
+node_modules/
