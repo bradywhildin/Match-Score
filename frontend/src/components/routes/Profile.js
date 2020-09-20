@@ -39,7 +39,7 @@ class Profile extends Component {
       hasProfile: false,
       zip: '',
       bio: '',
-      a1: "0",
+      a1: null,
       a2: null,
       a3: null,
       a4: null,
