@@ -39,7 +39,13 @@ class CheckUserProfile(APIView):
             response = { 
                 'has_profile': 1,
                 'profile': {
-                    'bio': user.profile.bio
+                    'bio': user.profile.bio,
+                    'zip': user.profile.zip,
+                    'a1': user.profile.a1,
+                    'a2': user.profile.a2,
+                    'a3': user.profile.a3,
+                    'a4': user.profile.a4,
+                    'a5': user.profile.a5,
                 }
             }
         else:
@@ -51,9 +57,15 @@ class CheckUserProfile(APIView):
 class ProfileUpdate(APIView):
     def put(self, request):
         profile = request.user.profile
+        profile.zip = request.data['zip']
         profile.bio = request.data['bio']
+        profile.a1 = request.data['a1']
+        profile.a2 = request.data['a2']
+        profile.a3 = request.data['a3']
+        profile.a4 = request.data['a4']
+        profile.a5 = request.data['a5']
         profile.save()
         response = {
-            'bio': profile.bio
+            'detail': 'Profile saved.'
         }
         return Response(response)
