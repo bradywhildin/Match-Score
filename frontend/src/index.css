@@ -1,0 +1,27 @@
+body {
+  margin: 15px 15px;
+}
+
+.profileItem {
+  margin: 0 15px;;
+}
+
+#profileForm {
+  margin: 0 auto;
+  margin-bottom: 15px;
+  width: 50%;
+  display: block;
+  border-style: solid;
+}
+
+#zip {
+  margin: 15px;
+}
+
+.profileLabel {
+  font-size: 22px;
+}
+
+#profileSubmit {
+  margin: 15px;
+}

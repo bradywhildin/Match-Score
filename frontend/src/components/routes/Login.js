@@ -14,8 +14,8 @@ class LoginForm extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleSubmit(e) {
+    e.preventDefault();
     console.log(Cookies.get('csrftoken'))
     const requestOptions = {
       method: 'POST',
@@ -48,11 +48,11 @@ class LoginForm extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Username:
-            <input type="text" onChange={(event) => this.setState({ username : event.target.value })} />
+            <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
           </label>
           <label>
             Password:
-            <input type="password" onChange={(event) => this.setState({ password : event.target.value })} />
+            <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
           </label>
           <input type="submit" value="Submit" />
         </form>

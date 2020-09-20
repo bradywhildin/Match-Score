@@ -17,8 +17,8 @@ class CreateAccountForm extends Component {
     this.loginUser = this.loginUser.bind(this);
   }
 
-  handleSubmit(event) {
-    event.preventDefault();
+  handleSubmit(e) {
+    e.preventDefault();
     const requestOptions = {
       method: 'POST',
       headers: { 
@@ -71,19 +71,19 @@ class CreateAccountForm extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             First Name:
-            <input type="text" onChange={(event) => this.setState({ firstName : event.target.value })} />
+            <input type="text" onChange={(e) => this.setState({ firstName : e.target.value })} />
           </label>
           <label>
             Last Name:
-            <input type="text" onChange={(event) => this.setState({ lastName : event.target.value })} />
+            <input type="text" onChange={(e) => this.setState({ lastName : e.target.value })} />
           </label>
           <label>
             Username:
-            <input type="text" onChange={(event) => this.setState({ username : event.target.value })} />
+            <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
           </label>
           <label>
             Password:
-            <input type="password" onChange={(event) => this.setState({ password : event.target.value })} />
+            <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
           </label>
           <input type="submit" value="Submit" />
         </form>
@@ -103,4 +103,4 @@ class CreateAccount extends Component {
   }
 }
 
-export default withRouter(CreateAccount)
+export default withRouter(CreateAccount);
