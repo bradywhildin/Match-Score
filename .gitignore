@@ -8,3 +8,4 @@ media
 env/
 .coverage
 node_modules/
+**/migrations/
