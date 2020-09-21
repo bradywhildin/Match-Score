@@ -2,35 +2,11 @@ import React, { Component } from "react"
 import { render } from "react-dom"
 import { withRouter } from "react-router-dom"
 import Cookies from "js-cookie"
-import { Form, Checkbox, TextArea, Header, Divider } from "semantic-ui-react"
-
-const q1 = [ // Want dog?
-  { value: 2, label: 'Yes, definitely' },
-  { value: 1, label: 'Yes, but a low energy dog or one I don\'t have to solely take care of' },
-  { value: 0, label: 'Doesn\'t matter to me' },
-  { value: -1, label: 'Only if I don\'t have to take care of it at all' },
-  { value: -2, label: 'No, they\'re just digusting and/or annoying' }
-];
-const q2 = [ // How many pigeons do you think you can carry at once?
-  { value: 2, label: '10+' },
-  { value: 1, label: '7-10' },
-  { value: 0, label: '3-6' },
-  { value: -1, label: '1-2' },
-  { value: -2, label: '0' }
-];
-const q3 = [ // Save baby or elderly couple from drowning?
-  { value: 2, label: 'Baby' },
-  { value: 0, label: 'Elderly couple' },
-  { value: -2, label: 'Try to save both but end up drowning and saving no one.' }
-];
-const q4 = [ // Be a fish or a bird?
-  { value: 2, label: 'Fish' },
-  { value: -2, label: 'Bird' },
-];
-const q5 = [ // Gain power of flight or invisibility?
-  { value: 2, label: 'Flight' },
-  { value: -2, label: 'Invisibility' },
-];
+import { Form, Checkbox, TextArea, Header, Divider } from "semantic-ui-react";
+import getNewAccessToken from "./utilities/getNewAccessToken";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+import { isBefore } from "date-fns"
 
 class Profile extends Component {
   constructor(props) {
@@ -56,11 +32,20 @@ class Profile extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    // check if access token needs refresh
+    const expiration = Date.parse(window.localStorage.getItem('expiration'));
+    var accessToken;
+    if (isBefore(new Date(), expiration)) {
+      accessToken = window.localStorage.getItem('access');
+    } else {
+      accessToken = await getNewAccessToken();
+    };
+    
     const requestOptions = {
       method : 'GET',
       headers: { 
-        'Authorization': 'Bearer ' + window.localStorage.getItem('access') 
+        'Authorization': 'Bearer ' + accessToken
       }
     };
     // determine if user already has profile
@@ -107,8 +92,17 @@ class Profile extends Component {
     this.setState({ a5: {value}.value });
   }
 
-  handleSubmit(e) {
+  async handleSubmit(e) {
     e.preventDefault();
+
+    // check if access token needs refresh
+    const expiration = Date.parse(window.localStorage.getItem('expiration'));
+    var accessToken;
+    if (isBefore(new Date(), expiration)) {
+      accessToken = window.localStorage.getItem('access');
+    } else {
+      accessToken = await getNewAccessToken();
+    };
 
     // update or create profile
     var method, url, message;
@@ -127,7 +121,7 @@ class Profile extends Component {
       method: method,
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + window.localStorage.getItem('access')
+        'Authorization': 'Bearer ' + accessToken
       },
       body: JSON.stringify({
         zip: this.state.zip,
@@ -150,7 +144,7 @@ class Profile extends Component {
   render() {
     return (
       <div id="profileForm">
-        <h1 class="profileItem">Profile Settings</h1>
+        <h1 className="profileItem">Profile Settings</h1>
 
         <Form onSubmit={this.handleSubmit}>
           <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />
@@ -179,7 +173,7 @@ function Bio(props) {
   return (
     <div id="bio" className="profileItem">
       <Form.Field>
-        <label class="profileLabel">Bio</label>
+        <label className="profileLabel">Bio</label>
         <TextArea
           label="Bio"
           placeholder="Enter a bio"
@@ -195,7 +189,7 @@ function Zip(props) {
   return (
     <div id="zip" className="profileItem">
       <Form.Field>
-        <label class="profileLabel">Zip Code</label>
+        <label className="profileLabel">Zip Code</label>
         <input 
           placeholder='Enter your zip code'
           value={props.zip}
@@ -435,4 +429,4 @@ function Q5(props) {
   );
 }
 
-export default Profile;
+export default Profile;        

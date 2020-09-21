@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { render } from "react-dom";
 import { withRouter } from "react-router-dom"
 import Cookies from "js-cookie"
+import { add } from 'date-fns'
 
 class LoginForm extends Component {
   constructor(props) {
@@ -35,9 +36,10 @@ class LoginForm extends Component {
         return response.json();
       })
       .then(data => {
-        console.log(data);
+        const expiration = add(new Date(), { minutes: 4, seconds: 30 })
         window.localStorage.setItem('access', data.access);
         window.localStorage.setItem('refresh', data.refresh);
+        window.localStorage.setItem('expiration', expiration)
         this.props.history.push('/home');
       })
   }
