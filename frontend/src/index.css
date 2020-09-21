@@ -11,7 +11,7 @@ body {
   margin-bottom: 15px;
   width: 50%;
   display: block;
-  border-style: solid;
+  border-style: none;
 }
 
 #zip {
