@@ -1,8 +1,9 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import { withRouter } from "react-router-dom"
-import Cookies from "js-cookie"
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { withRouter } from 'react-router-dom'
+import Cookies from 'js-cookie'
 import { add } from 'date-fns'
+import NavBar from './NavBar';
 
 class LoginForm extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class LoginForm extends Component {
         password: this.state.password
       })
     };
-    fetch("api/token/", requestOptions)
+    fetch('api/token/', requestOptions)
       .then(response => {
         if (response.status > 400) {
           alert('Wrong email/password')
@@ -46,19 +47,17 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Username:
-            <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
-          </label>
-          <label>
-            Password:
-            <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Username:
+          <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
+        </label>
+        <label>
+          Password:
+          <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
     )
   }
 }
@@ -67,7 +66,7 @@ class Login extends Component {
   render() {
     return (
       <div>
-        <h1>Login</h1>
+        <NavBar current="login" />
         <LoginForm history={this.props.history} />
       </div>
     );

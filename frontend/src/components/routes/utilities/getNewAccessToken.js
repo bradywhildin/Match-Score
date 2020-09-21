@@ -25,7 +25,7 @@ function getNewAccessToken() {
       window.localStorage.setItem('access', data.access);
       window.localStorage.setItem('expiration', expiration);
       return data.access;
-    }))
+    }));
 }
 
 export default getNewAccessToken;

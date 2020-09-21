@@ -1,9 +1,10 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import { isBefore } from "date-fns";
-import getNewAccessToken from "./utilities/getNewAccessToken";
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import { isBefore } from 'date-fns';
+import getNewAccessToken from './utilities/getNewAccessToken';
+import NavBar from './NavBar';
 
 class Home extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class Home extends Component {
     this.state = {
       data: [],
       loaded: false,
-      placeholder: "Loading"
+      placeholder: 'Loading'
     };
   }
 
@@ -28,7 +29,7 @@ class Home extends Component {
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
     }
-    fetch("api/account/get-users", requestOptions)
+    fetch('api/account/get-users', requestOptions)
       .then(response => {
         if (response.status > 400) { // generate new access code and try again
           getNewAccessToken()
@@ -62,6 +63,8 @@ class Home extends Component {
 
   render() {
     return (
+      <div>
+        <NavBar current="home" />
         <ul>
           {this.state.data.map(user => {
             return (
@@ -71,6 +74,7 @@ class Home extends Component {
             );
           })}
         </ul>
+      </div>
     );
   }
 }

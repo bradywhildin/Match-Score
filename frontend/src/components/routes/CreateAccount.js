@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import { withRouter } from "react-router-dom"
-import Cookies from "js-cookie"
+import React, { Component } from 'react';
+import { render } from 'react-dom';
+import { withRouter } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import NavBar from './NavBar';
 
 class CreateAccountForm extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class CreateAccountForm extends Component {
         password: this.state.password
       })
     };
-    fetch("api/account/create-user", requestOptions)
+    fetch('api/account/create-user', requestOptions)
       .then(response => {
         if (response.status > 400) {
           alert('Account Creation Failed')
@@ -53,7 +54,7 @@ class CreateAccountForm extends Component {
         password: this.state.password
       })
     };
-    fetch("api/token/", requestOptions)
+    fetch('api/token/', requestOptions)
       .then(response => {
         return response.json();
       })
@@ -96,7 +97,7 @@ class CreateAccount extends Component {
   render() {
     return (
       <div>
-        <h1>Create Account</h1>
+        <NavBar current="createAccount" />
         <CreateAccountForm history={this.props.history} />
       </div>
     )

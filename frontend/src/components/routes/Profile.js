@@ -1,12 +1,13 @@
-import React, { Component } from "react"
-import { render } from "react-dom"
-import { withRouter } from "react-router-dom"
-import Cookies from "js-cookie"
-import { Form, Checkbox, TextArea, Header, Divider } from "semantic-ui-react";
-import getNewAccessToken from "./utilities/getNewAccessToken";
-import "core-js/stable";
-import "regenerator-runtime/runtime";
-import { isBefore } from "date-fns"
+import React, { Component } from 'react'
+import { render } from 'react-dom'
+import { withRouter } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
+import getNewAccessToken from './utilities/getNewAccessToken';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+import { isBefore } from 'date-fns';
+import NavBar from './NavBar';
 
 class Profile extends Component {
   constructor(props) {
@@ -143,27 +144,31 @@ class Profile extends Component {
 
   render() {
     return (
-      <div id="profileForm">
-        <h1 className="profileItem">Profile Settings</h1>
+      <div>
+        <NavBar current="profile" />
 
-        <Form onSubmit={this.handleSubmit}>
-          <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />
-          <Bio bio={this.state.bio} handleChange={this.handleChangeBio} />
-          <br />
-          <Q1 a={this.state.a1} handleChange={this.handleChangeA1} />
-          <Divider />
-          <Q2 a={this.state.a2} handleChange={this.handleChangeA2} />
-          <Divider />
-          <Q3 a={this.state.a3} handleChange={this.handleChangeA3} />
-          <Divider />
-          <Q4 a={this.state.a4} handleChange={this.handleChangeA4} />
-          <Divider />
-          <Q5 a={this.state.a5} handleChange={this.handleChangeA5} />
-          <Divider />
-          <Form.Button id="profileSubmit">Save</Form.Button>
-        </Form>
+        <div id="profileForm">
+          <h1 className="profileItem">Profile Settings</h1>
 
-        <p>{this.state.message}</p>
+          <Form onSubmit={this.handleSubmit}>
+            <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />
+            <Bio bio={this.state.bio} handleChange={this.handleChangeBio} />
+            <br />
+            <Q1 a={this.state.a1} handleChange={this.handleChangeA1} />
+            <Divider />
+            <Q2 a={this.state.a2} handleChange={this.handleChangeA2} />
+            <Divider />
+            <Q3 a={this.state.a3} handleChange={this.handleChangeA3} />
+            <Divider />
+            <Q4 a={this.state.a4} handleChange={this.handleChangeA4} />
+            <Divider />
+            <Q5 a={this.state.a5} handleChange={this.handleChangeA5} />
+            <Divider />
+            <Form.Button id="profileSubmit">Save</Form.Button>
+          </Form>
+
+          <p>{this.state.message}</p>
+        </div>
       </div>
     )
   }
