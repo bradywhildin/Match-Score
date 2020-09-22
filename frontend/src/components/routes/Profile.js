@@ -3,10 +3,10 @@ import { render } from 'react-dom'
 import { withRouter } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
-import getNewAccessToken from './utilities/getNewAccessToken';
+import checkForUser from './utilities/checkForUser';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { isBefore } from 'date-fns';
+import { isFuture } from 'date-fns';
 import NavBar from './NavBar';
 
 class Profile extends Component {
@@ -34,19 +34,12 @@ class Profile extends Component {
   }
 
   async componentDidMount() {
-    // check if access token needs refresh
-    const expiration = Date.parse(window.localStorage.getItem('expiration'));
-    var accessToken;
-    if (isBefore(new Date(), expiration)) {
-      accessToken = window.localStorage.getItem('access');
-    } else {
-      accessToken = await getNewAccessToken();
-    };
+    if (!checkForUser()) this.props.history.push('/login');
     
     const requestOptions = {
       method : 'GET',
       headers: { 
-        'Authorization': 'Bearer ' + accessToken
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access')
       }
     };
     // determine if user already has profile
@@ -68,7 +61,7 @@ class Profile extends Component {
             a5: data.profile.a5.toString(),
           });
         }
-      });
+      })
   }
 
   handleChangeZip(e) {
@@ -94,16 +87,18 @@ class Profile extends Component {
   }
 
   async handleSubmit(e) {
-    e.preventDefault();
+    if (!checkForUser()) this.props.history.push('/login');
 
     // check if access token needs refresh
     const expiration = Date.parse(window.localStorage.getItem('expiration'));
     var accessToken;
-    if (isBefore(new Date(), expiration)) {
+    if (isFuture(expiration)) {
       accessToken = window.localStorage.getItem('access');
     } else {
       accessToken = await getNewAccessToken();
     };
+
+    if (!accessToken) this.props.history.push('/login');
 
     // update or create profile
     var method, url, message;
@@ -134,18 +129,19 @@ class Profile extends Component {
         a5: parseInt(this.state.a5),
       })
     };
+
     fetch(url, requestOptions)
       .then(() => {
         this.setState({
           message: message
         })
-      });
+      })
   }
 
   render() {
     return (
       <div>
-        <NavBar current="profile" />
+        <NavBar current="profile" loggedIn={true} />
 
         <div id="profileForm">
           <h1 className="profileItem">Profile Settings</h1>

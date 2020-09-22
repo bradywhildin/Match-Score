@@ -15,17 +15,19 @@ function getNewAccessToken() {
     })
   };
 
-  return (fetch("api/token/refresh/", requestOptions)
-    .then(response => {
-      return response.json();
-    })
-    .then(data => {
-      console.log(data);
-      const expiration = add(new Date, { minutes: 4, seconds: 30 });
-      window.localStorage.setItem('access', data.access);
-      window.localStorage.setItem('expiration', expiration);
-      return data.access;
-    }));
+  return (
+    fetch("api/token/refresh/", requestOptions)
+      .then(response => {
+        return response.json();
+      })
+      .then(data => {
+        console.log(data);
+        const expiration = add(new Date, { minutes: 4, seconds: 30 });
+        window.localStorage.setItem('access', data.access);
+        window.localStorage.setItem('expiration', expiration);
+        return data.access;
+      })
+  );
 }
 
 export default getNewAccessToken;

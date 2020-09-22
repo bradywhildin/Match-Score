@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { render } from 'react-dom';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { isBefore } from 'date-fns';
-import getNewAccessToken from './utilities/getNewAccessToken';
+import { isFuture } from 'date-fns';
 import NavBar from './NavBar';
+import checkForUser from './utilities/checkForUser';
 
 class Home extends Component {
   constructor(props) {
@@ -17,39 +17,20 @@ class Home extends Component {
   }
 
   async componentDidMount() {
-    // check if access token needs refresh
-    const expiration = Date.parse(window.localStorage.getItem('expiration'));
-    var accessToken;
-    if (isBefore(new Date(), expiration)) {
-      accessToken = window.localStorage.getItem('access');
-    } else {
-      accessToken = await getNewAccessToken();
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
     };
+
 
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
     }
     fetch('api/account/get-users', requestOptions)
       .then(response => {
-        if (response.status > 400) { // generate new access code and try again
-          getNewAccessToken()
-          .then(() => {
-            requestOptions = { headers: { 'Authorization': 'Bearer ' + accessToken }};
-            fetch('api/account/check-user-profile', requestOptions)
-              .then(response => {
-                console.log(response);
-                if (response.status > 400) {
-                  this.props.history.push('/login');
-                  return;
-                }
-                return response.json();
-              });
-          })
-        } else {
           return response.json();
-        };
       })
-
       .then(data => {
         console.log(data);
         this.setState(() => {
@@ -58,13 +39,13 @@ class Home extends Component {
             loaded: true
           };
         });
-      });
+      })
   }
 
   render() {
     return (
       <div>
-        <NavBar current="home" />
+        <NavBar current="home" loggedIn={true} />
         <ul>
           {this.state.data.map(user => {
             return (

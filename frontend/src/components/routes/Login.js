@@ -66,7 +66,7 @@ class Login extends Component {
   render() {
     return (
       <div>
-        <NavBar current="login" />
+        <NavBar current="login" loggedIn={false} />
         <LoginForm history={this.props.history} />
       </div>
     );

@@ -63,7 +63,7 @@ class CreateAccountForm extends Component {
         window.localStorage.setItem('access', data.access);
         window.localStorage.setItem('refresh', data.refresh);
         this.props.history.push('/home');
-      })
+      });
   }
 
   render() {
@@ -97,7 +97,7 @@ class CreateAccount extends Component {
   render() {
     return (
       <div>
-        <NavBar current="createAccount" />
+        <NavBar current="createAccount" loggedIn={false} />
         <CreateAccountForm history={this.props.history} />
       </div>
     )
