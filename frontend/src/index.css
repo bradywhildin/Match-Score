@@ -6,7 +6,7 @@ body {
   margin: 0 15px;;
 }
 
-#profileForm {
+.userForm {
   margin: 0 auto;
   margin-bottom: 15px;
   width: 50%;

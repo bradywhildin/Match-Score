@@ -143,7 +143,7 @@ class Profile extends Component {
       <div>
         <NavBar current="profile" loggedIn={true} />
 
-        <div id="profileForm">
+        <div className="userForm">
           <h1 className="profileItem">Profile Settings</h1>
 
           <Form onSubmit={this.handleSubmit}>

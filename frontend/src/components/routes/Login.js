@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { add } from 'date-fns'
 import NavBar from './NavBar';
+import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
 
 class LoginForm extends Component {
   constructor(props) {
@@ -13,7 +14,17 @@ class LoginForm extends Component {
       password: ''
     };
 
+    this.handleChangeUsername = this.handleChangeUsername.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChangeUsername(e, {value}) {
+    this.setState({ username: {value}.value });
+  }
+
+  handleChangePassword(e, {value}) {
+    this.setState({ password: {value}.value });
   }
 
   handleSubmit(e) {
@@ -47,17 +58,11 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Username:
-          <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
-        </label>
-        <label>
-          Password:
-          <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
-        </label>
-        <input type="submit" value="Submit" />
-      </form>
+      <Form onSubmit={this.handleSubmit} className="userForm">
+        <Form.Input label="Username" onChange={this.handleChangeUsername} />
+        <Form.Input label="Password" onChange={this.handleChangePassword} type="password" />
+        <Form.Button id="profileSubmit">Login</Form.Button>
+      </Form>
     )
   }
 }
