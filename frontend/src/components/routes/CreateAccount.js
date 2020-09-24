@@ -3,6 +3,7 @@ import { render } from 'react-dom';
 import { withRouter } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import NavBar from './NavBar';
+import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
 
 class CreateAccountForm extends Component {
   constructor(props) {
@@ -14,8 +15,30 @@ class CreateAccountForm extends Component {
       password:''
     };
 
+    this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
+    this.handleChangeLastName = this.handleChangeLastName.bind(this);
+    this.handleChangeUsername = this.handleChangeUsername.bind(this);
+    this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.loginUser = this.loginUser.bind(this);
+  }
+
+  handleChangeFirstName(e, {value}) {
+    this.setState({ firstName: {value}.value });
+  }
+
+  handleChangeLastName(e, {value}) {
+    console.log({value}.value);
+    this.setState({ lastName: {value}.value });
+  }
+
+  handleChangeUsername(e, {value}) {
+    console.log({value}.value);
+    this.setState({ username: {value}.value });
+  }
+
+  handleChangePassword(e, {value}) {
+    this.setState({ password: {value}.value });
   }
 
   handleSubmit(e) {
@@ -36,8 +59,8 @@ class CreateAccountForm extends Component {
     fetch('api/account/create-user', requestOptions)
       .then(response => {
         if (response.status > 400) {
-          alert('Account Creation Failed')
-          return
+          alert('Account Creation Failed');
+          return;
         };
         this.loginUser();
       });
@@ -68,27 +91,13 @@ class CreateAccountForm extends Component {
 
   render() {
     return (
-      <div>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            First Name:
-            <input type="text" onChange={(e) => this.setState({ firstName : e.target.value })} />
-          </label>
-          <label>
-            Last Name:
-            <input type="text" onChange={(e) => this.setState({ lastName : e.target.value })} />
-          </label>
-          <label>
-            Username:
-            <input type="text" onChange={(e) => this.setState({ username : e.target.value })} />
-          </label>
-          <label>
-            Password:
-            <input type="password" onChange={(e) => this.setState({ password : e.target.value })} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
+      <Form onSubmit={this.handleSubmit} className="userForm">
+        <Form.Input label="First Name" onChange={this.handleChangeFirstName} />
+        <Form.Input label="Last Name" onChange={this.handleChangeLastName} />
+        <Form.Input label="Username" onChange={this.handleChangeUsername} />
+        <Form.Input label="Password" onChange={this.handleChangePassword} type="password" />
+        <Form.Button className="formSubmit">Create Account</Form.Button>
+      </Form>
     )
   }
 }

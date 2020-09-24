@@ -160,7 +160,7 @@ class Profile extends Component {
             <Divider />
             <Q5 a={this.state.a5} handleChange={this.handleChangeA5} />
             <Divider />
-            <Form.Button id="profileSubmit">Save</Form.Button>
+            <Form.Button className="formSubmit">Save</Form.Button>
           </Form>
 
           <p>{this.state.message}</p>

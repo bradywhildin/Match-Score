@@ -61,7 +61,7 @@ class LoginForm extends Component {
       <Form onSubmit={this.handleSubmit} className="userForm">
         <Form.Input label="Username" onChange={this.handleChangeUsername} />
         <Form.Input label="Password" onChange={this.handleChangePassword} type="password" />
-        <Form.Button id="profileSubmit">Login</Form.Button>
+        <Form.Button className="formSubmit">Login</Form.Button>
       </Form>
     )
   }

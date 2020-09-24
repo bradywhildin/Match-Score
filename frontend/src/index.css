@@ -22,6 +22,6 @@ body {
   font-size: 22px;
 }
 
-#profileSubmit {
+.formSubmit {
   margin: 15px;
 }
