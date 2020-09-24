@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-//import 'semantic-ui-css/semantic.min.css'
+import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
 
 import Home from './routes/Home'
 import Login from './routes/Login'
@@ -11,14 +11,17 @@ import Profile from './routes/Profile'
 
 function App() {
   return (
-    <Router>
-        <Switch>
-          <Route path='/create-account' component={CreateAccount} />
-          <Route path='/login' component={Login} />
-          <Route path='/home' component={Home} />
-          <Route path='/profile' component={Profile} />
-        </Switch>
-    </Router>
+    <>
+      <Header as="h1" textAlign="center">Match Score</Header>
+      <Router>
+          <Switch>
+            <Route path="/create-account" component={CreateAccount} />
+            <Route path="/login" component={Login} />
+            <Route path="/home" component={Home} />
+            <Route path="/profile" component={Profile} />
+          </Switch>
+      </Router>
+    </>
   );
 }
 
