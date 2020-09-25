@@ -10,13 +10,11 @@ class CreateAccountForm extends Component {
     super(props);
     this.state = {
       firstName: '',
-      lastName: '',
       username: '',
       password:''
     };
 
     this.handleChangeFirstName = this.handleChangeFirstName.bind(this);
-    this.handleChangeLastName = this.handleChangeLastName.bind(this);
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
     this.handleChangePassword = this.handleChangePassword.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -25,11 +23,6 @@ class CreateAccountForm extends Component {
 
   handleChangeFirstName(e, {value}) {
     this.setState({ firstName: {value}.value });
-  }
-
-  handleChangeLastName(e, {value}) {
-    console.log({value}.value);
-    this.setState({ lastName: {value}.value });
   }
 
   handleChangeUsername(e, {value}) {
@@ -93,7 +86,6 @@ class CreateAccountForm extends Component {
     return (
       <Form onSubmit={this.handleSubmit} className="userForm">
         <Form.Input label="First Name" onChange={this.handleChangeFirstName} />
-        <Form.Input label="Last Name" onChange={this.handleChangeLastName} />
         <Form.Input label="Username" onChange={this.handleChangeUsername} />
         <Form.Input label="Password" onChange={this.handleChangePassword} type="password" />
         <Form.Button className="formSubmit">Create Account</Form.Button>
