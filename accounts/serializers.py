@@ -17,4 +17,4 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('bio', 'zip', 'a1', 'a2', 'a3', 'a4', 'a5',)
+        fields = ('bio', 'zip', 'latitude', 'longitude', 'a1', 'a2', 'a3', 'a4', 'a5',)

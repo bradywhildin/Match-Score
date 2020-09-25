@@ -87,21 +87,20 @@ class Profile extends Component {
   }
 
   async handleSubmit(e) {
+    e.preventDefault();
     if (!checkForUser()) this.props.history.push('/login');
 
-    // check if access token needs refresh
-    const expiration = Date.parse(window.localStorage.getItem('expiration'));
-    var accessToken;
-    if (isFuture(expiration)) {
-      accessToken = window.localStorage.getItem('access');
+    var url = 'api/account/get-coordinates?zip=' + this.state.zip;
+    const response = await fetch(url)
+    if (response.ok) {
+      var coord = await response.json();
     } else {
-      accessToken = await getNewAccessToken();
+      alert('Error finding coordinates');
+      return;
     };
 
-    if (!accessToken) this.props.history.push('/login');
-
     // update or create profile
-    var method, url, message;
+    var method, message;
     if (this.state.hasProfile) {
       method = 'PUT';
       url = 'api/account/update-profile';
@@ -117,11 +116,13 @@ class Profile extends Component {
       method: method,
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + accessToken
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access')
       },
       body: JSON.stringify({
         zip: this.state.zip,
         bio: this.state.bio,
+        latitude: coord.latitude,
+        longitude: coord.longitude,
         a1: parseInt(this.state.a1),
         a2: parseInt(this.state.a2),
         a3: parseInt(this.state.a3),

@@ -44,7 +44,6 @@ class Home extends Component {
       return;
     };
 
-
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
     }
@@ -74,7 +73,10 @@ class Home extends Component {
                 <Card.Content>
                   <Card.Header>{user.first_name}</Card.Header>
                   <Card.Meta>Match Score: {user.match_score}/20</Card.Meta>
-                  <Card.Description>{user.bio}</Card.Description>
+                  <Card.Meta>Within {user.distance} miles</Card.Meta>
+                  <Card.Description>
+                    {user.bio}
+                  </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
                   <div className='ui two buttons'>

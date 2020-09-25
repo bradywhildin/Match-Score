@@ -5,6 +5,8 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from geopy.geocoders import Nominatim
+from geopy.distance import geodesic
 
 class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny,]
@@ -22,6 +24,7 @@ class GetUserList(APIView):
         currentUser = request.user
         profile = currentUser.profile
         currentUserAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
+        currentUserCoord = (profile.latitude, profile.longitude)
 
         users = User.objects.all().exclude(id=currentUser.id)
         response = []
@@ -36,20 +39,28 @@ class GetUserList(APIView):
                     diff = abs(currentUserAnswers[i] - userAnswers[i])
                     matchScore -= diff
 
+                # find distance between zip codes
+                userCoord = (profile.latitude, profile.longitude)
+                distance = geodesic(currentUserCoord, userCoord).miles
+
+                totalScore = matchScore - (distance/5) # factor in distance and match score to get total score
+
+                distanceShown = str(round(distance + 5))
                 response.append({
                     'bio': profile.bio,
+                    'distance': distanceShown,
                     'first_name': user.first_name,
                     'id': user.id,
                     'match_score': matchScore,
-                    'username': user.username,
+                    'total_score': totalScore,
                 })
 
-        response.sort(key=getMatchScore, reverse=True) # sort users from best to worst match score
+        response.sort(key=getTotalScore, reverse=True) # sort users from best to worst total score
 
         return Response(response)
 
-def getMatchScore(json):
-    return json['match_score']
+def getTotalScore(json):
+    return json['total_score']
 
 class CheckUserProfile(APIView):
     def get(self, request):
@@ -76,15 +87,30 @@ class CheckUserProfile(APIView):
 class ProfileUpdate(APIView):
     def put(self, request):
         profile = request.user.profile
-        profile.zip = request.data['zip']
         profile.bio = request.data['bio']
+        profile.zip = request.data['zip']
+        profile.latitude = request.data['latitude']
+        profile.longitude = request.data['longitude']
         profile.a1 = request.data['a1']
         profile.a2 = request.data['a2']
         profile.a3 = request.data['a3']
         profile.a4 = request.data['a4']
         profile.a5 = request.data['a5']
         profile.save()
+
         response = {
             'detail': 'Profile saved.'
+        }
+        return Response(response)
+
+class ZipToCoord(APIView):
+    permission_classes = [AllowAny,]
+    def get(self, request):
+        geolocator = Nominatim(user_agent='views.py')
+        zip = request.query_params['zip']
+        location = geolocator.geocode(zip + ', United States')
+        response = {
+            'latitude': location.latitude,
+            'longitude': location.longitude,
         }
         return Response(response)
