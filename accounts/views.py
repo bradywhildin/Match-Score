@@ -88,11 +88,3 @@ class ProfileUpdate(APIView):
             'detail': 'Profile saved.'
         }
         return Response(response)
-
-class Logout(APIView):
-    def get(self, request):
-        request.user.auth_token.delete()
-        response = {
-            'detail': 'Logged out.'
-        }
-        return Response(response)
