@@ -52,6 +52,7 @@ class GetUserList(APIView):
                     'first_name': user.first_name,
                     'id': user.id,
                     'match_score': matchScore,
+                    'image': profile.image.url,
                     'total_score': totalScore,
                 })
 

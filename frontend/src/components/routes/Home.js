@@ -5,7 +5,7 @@ import 'regenerator-runtime/runtime';
 import { isFuture } from 'date-fns';
 import NavBar from './NavBar';
 import checkForUser from './utilities/checkForUser';
-import { Card, Button } from 'semantic-ui-react';
+import { Card, Button, Image } from 'semantic-ui-react';
 
 class Home extends Component {
   constructor(props) {
@@ -70,6 +70,7 @@ class Home extends Component {
           {this.state.data.map(user => {
             return (
               <Card key={user.id}>
+                <Image src={user.image} wrapped ui={false} />
                 <Card.Content>
                   <Card.Header>{user.first_name}</Card.Header>
                   <Card.Meta>Match Score: {user.match_score}/20</Card.Meta>
