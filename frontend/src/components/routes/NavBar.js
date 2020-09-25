@@ -23,7 +23,7 @@ class NavBar extends Component {
 
   async componentDidMount() {
     const current = this.props.current;
-    const loggedIn = this.props.loggedIn
+    const loggedIn = this.props.loggedIn;
     var items;
     if (loggedIn) {
       items = [
@@ -41,7 +41,7 @@ class NavBar extends Component {
   }
 
   render() {
-    return <Menu items={this.state.items} />
+    return <div className="navDiv"><Menu items={this.state.items} /></div>
   }
 };
 

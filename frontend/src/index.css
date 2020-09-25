@@ -27,5 +27,23 @@ body {
 }
 
 #cardGroup {
-  margin: 0 100px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 500px) {
+  #cardGroup {
+    width: 500px;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  #cardGroup {
+    width: 1000px;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .navDiv {
+    margin: 15px 100px;
+  }
 }

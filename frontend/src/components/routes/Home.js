@@ -10,7 +10,12 @@ import { Card, Button } from 'semantic-ui-react';
 class Home extends Component {
   constructor(props) {
     super(props);
-    const itemsPerRow = (window.innerWidth > 1000) ? 3 : 2;
+
+    var itemsPerRow;
+    if (window.innerWidth > 1000) itemsPerRow = 3;
+    else if (window.innerWidth > 500) itemsPerRow = 2;
+    else itemsPerRow = 1;
+
     this.state = {
       data: [],
       loaded: false,
@@ -22,7 +27,11 @@ class Home extends Component {
   }
 
   handleResize() {
-    const itemsPerRow = (window.innerWidth > 1000) ? 3 : 2;
+    var itemsPerRow;
+    if (window.innerWidth > 1000) itemsPerRow = 3;
+    else if (window.innerWidth > 500) itemsPerRow = 2;
+    else itemsPerRow = 1;
+  
     this.setState({ itemsPerRow : itemsPerRow });
   }
 
