@@ -144,7 +144,7 @@ class Profile extends Component {
         <NavBar current="profile" loggedIn={true} />
 
         <div className="userForm">
-          <h1 className="profileItem">Profile Settings</h1>
+          <Header as="h3">Profile Settings</Header>
 
           <Form onSubmit={this.handleSubmit}>
             <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />

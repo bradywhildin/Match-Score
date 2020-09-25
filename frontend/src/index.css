@@ -23,5 +23,9 @@ body {
 }
 
 .formSubmit {
-  margin: 15px;
+  margin: 0 15px;
+}
+
+#cardGroup {
+  margin: 0 100px;
 }

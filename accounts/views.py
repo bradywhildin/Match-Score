@@ -19,18 +19,37 @@ class ProfileCreate(generics.CreateAPIView):
 
 class GetUserList(APIView):
     def get(self, request):
-        users = User.objects.all()
+        currentUser = request.user
+        profile = currentUser.profile
+        currentUserAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
+
+        users = User.objects.all().exclude(id=currentUser.id)
         response = []
         for user in users:
-            if user != request.user and hasattr(user, 'profile'): # make sure users shown aren't current user or a user without profile settings
+            if hasattr(user, 'profile'): # make sure user has a profile
+                matchScore = 20
+                profile = user.profile
+                userAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
+
+                # find differences in answers between user and logged in user
+                for i in range(len(userAnswers)):
+                    diff = abs(currentUserAnswers[i] - userAnswers[i])
+                    matchScore -= diff
+
                 response.append({
-                    'bio': user.profile.bio,
+                    'bio': profile.bio,
                     'first_name': user.first_name,
                     'id': user.id,
-                    'last_name': user.last_name,
+                    'match_score': matchScore,
                     'username': user.username,
                 })
+
+        response.sort(key=getMatchScore, reverse=True) # sort users from best to worst match score
+
         return Response(response)
+
+def getMatchScore(json):
+    return json['match_score']
 
 class CheckUserProfile(APIView):
     def get(self, request):

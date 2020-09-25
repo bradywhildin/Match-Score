@@ -5,18 +5,30 @@ import 'regenerator-runtime/runtime';
 import { isFuture } from 'date-fns';
 import NavBar from './NavBar';
 import checkForUser from './utilities/checkForUser';
+import { Card, Button } from 'semantic-ui-react';
 
 class Home extends Component {
   constructor(props) {
     super(props);
+    const itemsPerRow = (window.innerWidth > 1000) ? 3 : 2;
     this.state = {
       data: [],
       loaded: false,
-      placeholder: 'Loading'
+      placeholder: 'Loading',
+      itemsPerRow: itemsPerRow,
     };
+
+    this.handleResize = this.handleResize.bind(this);
+  }
+
+  handleResize() {
+    const itemsPerRow = (window.innerWidth > 1000) ? 3 : 2;
+    this.setState({ itemsPerRow : itemsPerRow });
   }
 
   async componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+
     const userLoggedIn = await checkForUser();
     if (!userLoggedIn) {
       this.props.history.push('/login');
@@ -46,15 +58,29 @@ class Home extends Component {
     return (
       <div>
         <NavBar current="home" loggedIn={true} />
-        <ul>
+        <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
           {this.state.data.map(user => {
             return (
-              <li key={user.id}>
-                {user.first_name} - {user.bio}
-              </li>
+              <Card key={user.id}>
+                <Card.Content>
+                  <Card.Header>{user.first_name}</Card.Header>
+                  <Card.Meta>Match Score: {user.match_score}/20</Card.Meta>
+                  <Card.Description>{user.bio}</Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                  <div className='ui two buttons'>
+                    <Button basic color='green'>
+                      Match
+                    </Button>
+                    <Button basic color='red'>
+                      Block
+                    </Button>
+                  </div>
+                </Card.Content>
+              </Card>
             );
           })}
-        </ul>
+        </Card.Group>
       </div>
     );
   }
