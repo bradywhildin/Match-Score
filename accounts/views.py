@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
+from rest_framework.parsers import MultiPartParser
 
 class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny,]
@@ -15,6 +16,7 @@ class UserCreate(generics.CreateAPIView):
 class ProfileCreate(generics.CreateAPIView):
     permission_classes = [IsAuthenticated,]
     serializer_class = ProfileSerializer
+    parser_classes = (MultiPartParser,)
 
     def perform_create(self, serializer):        
         serializer.save(user=self.request.user)
@@ -70,13 +72,14 @@ class CheckUserProfile(APIView):
             response = { 
                 'has_profile': 1,
                 'profile': {
-                    'bio': user.profile.bio,
-                    'zip': user.profile.zip,
                     'a1': user.profile.a1,
                     'a2': user.profile.a2,
                     'a3': user.profile.a3,
                     'a4': user.profile.a4,
                     'a5': user.profile.a5,
+                    'bio': user.profile.bio,
+                    'image': user.profile.image.url,
+                    'zip': user.profile.zip,
                 }
             }
         else:

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { withRouter } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
+import { Form, Checkbox, TextArea, Header, Divider, Button, Image } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -14,6 +14,8 @@ class Profile extends Component {
     super(props);
     this.state = {
       hasProfile: false,
+      imageFile: null,
+      imageUrl: '',
       zip: '',
       bio: '',
       a1: null,
@@ -23,6 +25,8 @@ class Profile extends Component {
       a5: null,
       message: '',
     };
+
+    this.handleChangeImageFile = this.handleChangeImageFile.bind(this);
     this.handleChangeZip = this.handleChangeZip.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
     this.handleChangeA1 = this.handleChangeA1.bind(this);
@@ -34,7 +38,7 @@ class Profile extends Component {
   }
 
   async componentDidMount() {
-    if (!checkForUser()) this.props.history.push('/login');
+    if (!(await checkForUser())) this.props.history.push('/login');
     
     const requestOptions = {
       method : 'GET',
@@ -52,6 +56,7 @@ class Profile extends Component {
           // fill in text boxes with current data
           this.setState({
             hasProfile: true,
+            imageUrl: data.profile.image,
             zip: data.profile.zip,
             bio: data.profile.bio,
             a1: data.profile.a1.toString(),
@@ -64,6 +69,10 @@ class Profile extends Component {
       })
   }
 
+  handleChangeImageFile(e) {
+    e.preventDefault();
+    this.setState({ imageFile: e.target.files[0] })
+  }
   handleChangeZip(e) {
     this.setState({ zip: e.target.value });
   }
@@ -112,23 +121,24 @@ class Profile extends Component {
       message = 'Your profile has been created.'
     };
 
+    var formData = new FormData();
+    formData.append('image', this.state.imageFile);
+    formData.append('zip', this.state.zip);
+    formData.append('bio', this.state.bio);
+    formData.append('latitude', coord.latitude);
+    formData.append('longitude', coord.longitude);
+    formData.append('a1', parseInt(this.state.a1))
+    formData.append('a2', parseInt(this.state.a2))
+    formData.append('a3', parseInt(this.state.a3))
+    formData.append('a4', parseInt(this.state.a4))
+    formData.append('a5', parseInt(this.state.a5))
+
     const requestOptions = {
       method: method,
       headers: { 
-        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + window.localStorage.getItem('access')
       },
-      body: JSON.stringify({
-        zip: this.state.zip,
-        bio: this.state.bio,
-        latitude: coord.latitude,
-        longitude: coord.longitude,
-        a1: parseInt(this.state.a1),
-        a2: parseInt(this.state.a2),
-        a3: parseInt(this.state.a3),
-        a4: parseInt(this.state.a4),
-        a5: parseInt(this.state.a5),
-      })
+      body: formData
     };
 
     fetch(url, requestOptions)
@@ -145,9 +155,8 @@ class Profile extends Component {
         <NavBar current="profile" loggedIn={true} />
 
         <div className="userForm">
-          <Header as="h3">Profile Settings</Header>
-
           <Form onSubmit={this.handleSubmit}>
+            <ImageUpload imageFile={this.state.imageFile} imageUrl={this.state.imageUrl} handleChange={this.handleChangeImageFile} />
             <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />
             <Bio bio={this.state.bio} handleChange={this.handleChangeBio} />
             <br />
@@ -169,6 +178,29 @@ class Profile extends Component {
       </div>
     )
   }
+}
+
+function ImageUpload(props) {
+  const fileInputRef = React.createRef();
+  return (
+    <div className="profileItem">
+      <Form.Field>
+        <label className="profileLabel">Profile Picture</label>
+        <Image src={props.imageUrl} wrapped ui={false} />
+        {/* <Button
+          content="Choose Picture"
+          labelPosition="left"
+          icon="file image"
+          onClick={() => fileInputRef.current.click()}
+        /> */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          onChange={props.handleChange}
+        />
+      </Form.Field>
+    </div>
+  )
 }
 
 function Bio(props) {
