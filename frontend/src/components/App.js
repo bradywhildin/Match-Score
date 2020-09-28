@@ -7,6 +7,7 @@ import Home from './routes/Home'
 import Login from './routes/Login'
 import CreateAccount from './routes/CreateAccount'
 import Profile from './routes/Profile'
+import Matches from './routes/Matches'
 // const Profile = lazy(() => import('./routes/Profile'));
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
             <Route path="/login" component={Login} />
             <Route path="/home" component={Home} />
             <Route path="/profile" component={Profile} />
+            <Route path="/matches" component={Matches} />
           </Switch>
       </Router>
     </>

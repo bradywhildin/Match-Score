@@ -23,6 +23,39 @@ class ProfileCreate(generics.CreateAPIView):
     def perform_create(self, serializer):        
         serializer.save(user=self.request.user)
 
+# calculate match score and total score and put together data to be displayed
+def getMatchData(user, currentUserAnswers, currentUserCoord):
+    matchScore = 20
+    profile = user.profile
+    userAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
+
+    # find differences in answers between user and logged in user
+    for i in range(len(userAnswers)):
+        diff = abs(currentUserAnswers[i] - userAnswers[i])
+        matchScore -= diff
+
+    # find distance between zip codes
+    userCoord = (profile.latitude, profile.longitude)
+    distance = geodesic(currentUserCoord, userCoord).miles
+
+    totalScore = matchScore - (distance/5) # factor in distance and match score to get total score
+
+    distanceShown = str(round(distance + 5))
+    data = {
+        'bio': profile.bio,
+        'distance': distanceShown,
+        'first_name': user.first_name,
+        'id': user.id,
+        'match_score': matchScore,
+        'image': profile.image.url,
+        'total_score': totalScore,
+    }
+
+    return data
+
+def getTotalScore(json):
+    return json['total_score']
+
 class GetUserList(APIView):
     def get(self, request):
         currentUser = request.user
@@ -40,38 +73,11 @@ class GetUserList(APIView):
             matchMade = (currentUserMatches.filter(user1=user) | currentUserMatches.filter(user2=user)).exists()
             
             if hasattr(user, 'profile') and not (matchRequestMade or matchMade):
-                matchScore = 20
-                profile = user.profile
-                userAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
-
-                # find differences in answers between user and logged in user
-                for i in range(len(userAnswers)):
-                    diff = abs(currentUserAnswers[i] - userAnswers[i])
-                    matchScore -= diff
-
-                # find distance between zip codes
-                userCoord = (profile.latitude, profile.longitude)
-                distance = geodesic(currentUserCoord, userCoord).miles
-
-                totalScore = matchScore - (distance/5) # factor in distance and match score to get total score
-
-                distanceShown = str(round(distance + 5))
-                response.append({
-                    'bio': profile.bio,
-                    'distance': distanceShown,
-                    'first_name': user.first_name,
-                    'id': user.id,
-                    'match_score': matchScore,
-                    'image': profile.image.url,
-                    'total_score': totalScore,
-                })
+                response.append(getMatchData(user, currentUserAnswers, currentUserCoord))
 
         response.sort(key=getTotalScore, reverse=True) # sort users from best to worst total score
 
         return Response(response)
-
-def getTotalScore(json):
-    return json['total_score']
 
 class CheckUserProfile(APIView):
     def get(self, request):

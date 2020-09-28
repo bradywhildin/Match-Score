@@ -28,6 +28,7 @@ class NavBar extends Component {
     if (loggedIn) {
       items = [
         { as: Link, content: 'Home', active: current=='home', key: 'home', to: '/home' },
+        { as: Link, content: 'Matches', active: current=='matches', key: 'matches', to: '/matches' },
         { as: Link, content: 'Profile', active: current=='profile', key: 'profile', to: '/profile' },
         { name: 'Logout', key: 'logout', onClick: logout, position: 'right' },
       ];

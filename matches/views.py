@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from .models import MatchRequest, Match
 from django.contrib.auth.models import User
 from rest_framework.response import Response
+from accounts.views import getMatchData
 
 class makeMatchRequest(APIView):
     def post(self, request):
@@ -27,3 +28,25 @@ class makeMatchRequest(APIView):
             }
 
         return Response(response)
+
+class getMatches(APIView):
+    def get(self, request):
+        currentUser = request.user
+        profile = currentUser.profile
+        currentUserAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
+        currentUserCoord = (profile.latitude, profile.longitude)
+
+        matches = Match.objects.filter(user1=currentUser) | Match.objects.filter(user2=currentUser)
+        response = []
+        for match in matches:
+            if currentUser == match.user1:
+                user = match.user2
+            else:
+                user = match.user1
+            response.append(getMatchData(user, currentUserAnswers, currentUserCoord))
+
+        return Response(response)
+
+            
+
+        
