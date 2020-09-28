@@ -189,7 +189,7 @@ function ImageUpload(props) {
     <div className="profileItem">
       <Form.Field>
         <label className="profileLabel">Profile Picture</label>
-        <Image src={props.imageUrl} wrapped ui={false} />
+        <img id="profileImage" src={props.imageUrl} />
         {/* <Button
           content="Choose Picture"
           labelPosition="left"

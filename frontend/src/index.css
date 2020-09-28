@@ -3,7 +3,7 @@ body {
 }
 
 .profileItem {
-  margin: 0 15px;;
+  margin: 0 15px;
 }
 
 .userForm {
@@ -32,6 +32,11 @@ body {
 
 .navDiv {
   margin-bottom: 15px;
+}
+
+#profileImage {
+  height: 200px;
+  width: auto;
 }
 
 @media screen and (min-width: 500px) {
