@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from rest_framework.parsers import MultiPartParser
+from rest_framework.exceptions import APIException
 
 class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny,]
@@ -90,22 +91,27 @@ class CheckUserProfile(APIView):
 
 class ProfileUpdate(APIView):
     def put(self, request):
-        profile = request.user.profile
-        profile.bio = request.data['bio']
-        profile.zip = request.data['zip']
-        profile.latitude = request.data['latitude']
-        profile.longitude = request.data['longitude']
-        profile.a1 = request.data['a1']
-        profile.a2 = request.data['a2']
-        profile.a3 = request.data['a3']
-        profile.a4 = request.data['a4']
-        profile.a5 = request.data['a5']
-        profile.save()
+        try:
+            profile = request.user.profile
+            profile.image = request.data['image']
+            profile.bio = request.data['bio']
+            profile.zip = request.data['zip']
+            profile.latitude = request.data['latitude']
+            profile.longitude = request.data['longitude']
+            profile.a1 = request.data['a1']
+            profile.a2 = request.data['a2']
+            profile.a3 = request.data['a3']
+            profile.a4 = request.data['a4']
+            profile.a5 = request.data['a5']
+            profile.save()
 
-        response = {
-            'detail': 'Profile saved.'
-        }
-        return Response(response)
+            response = {
+                'detail': 'Profile saved.'
+            }
+            return Response(response)
+
+        except:
+            raise APIException('Profile update failed.')
 
 class ZipToCoord(APIView):
     permission_classes = [AllowAny,]
