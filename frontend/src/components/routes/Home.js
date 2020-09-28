@@ -100,7 +100,7 @@ class Home extends Component {
                 key={user.id} 
                 image={user.image} 
                 firstName={user.first_name}
-                matchScore={user.matchScore} 
+                matchScore={user.match_score} 
                 distance={user.distance} 
                 bio={user.bio}
                 showButtons={true}
