@@ -9,7 +9,7 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import APIException
-from matches.models import MatchRequest
+from matches.models import MatchRequest, Match
 
 class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny,]
@@ -29,12 +29,17 @@ class GetUserList(APIView):
         profile = currentUser.profile
         currentUserAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
         currentUserCoord = (profile.latitude, profile.longitude)
+        currentUserMatchRequests = MatchRequest.objects.filter(sender=currentUser)
+        currentUserMatches = Match.objects.filter(user1=currentUser) | Match.objects.filter(user2=currentUser)
 
         users = User.objects.all().exclude(id=currentUser.id)
         response = []
         for user in users:
-            # make sure user has a profile and not already sent a match request
-            if hasattr(user, 'profile') and not MatchRequest.objects.filter(sender=currentUser, reciever=user).exists():
+            # check if user already requested or matched with
+            matchRequestMade = currentUserMatchRequests.filter(reciever=user).exists()
+            matchMade = (currentUserMatches.filter(user1=user) | currentUserMatches.filter(user2=user)).exists()
+            
+            if hasattr(user, 'profile') and not (matchRequestMade or matchMade):
                 matchScore = 20
                 profile = user.profile
                 userAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
