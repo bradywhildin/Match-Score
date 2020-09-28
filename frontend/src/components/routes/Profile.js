@@ -71,7 +71,10 @@ class Profile extends Component {
 
   handleChangeImageFile(e) {
     e.preventDefault();
-    this.setState({ imageFile: e.target.files[0] })
+    this.setState({ 
+      imageFile: e.target.files[0],
+      imageUrl: URL.createObjectURL(e.target.files[0]) 
+    });
   }
   handleChangeZip(e) {
     this.setState({ zip: e.target.value });
@@ -146,7 +149,7 @@ class Profile extends Component {
         this.setState({
           message: message
         })
-      })
+      });
   }
 
   render() {
