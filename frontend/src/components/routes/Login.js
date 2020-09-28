@@ -44,6 +44,7 @@ class LoginForm extends Component {
       .then(response => {
         if (response.status > 400) {
           alert('Wrong email/password')
+          throw new Error('Wrong Email/Password');
         };
         return response.json();
       })
@@ -53,6 +54,9 @@ class LoginForm extends Component {
         window.localStorage.setItem('refresh', data.refresh);
         window.localStorage.setItem('expiration', expiration)
         this.props.history.push('/home');
+      })
+      .catch(e => {
+        console.log('Error:', e);
       })
   }
 
