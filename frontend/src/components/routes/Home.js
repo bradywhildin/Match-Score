@@ -23,6 +23,7 @@ class Home extends Component {
       itemsPerRow: itemsPerRow,
     };
 
+    this.handleMatch = this.handleMatch.bind(this);
     this.handleResize = this.handleResize.bind(this);
   }
 
@@ -46,7 +47,7 @@ class Home extends Component {
 
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
-    }
+    };
     fetch('api/account/get-users', requestOptions)
       .then(response => {
           return response.json();
@@ -59,7 +60,34 @@ class Home extends Component {
             loaded: true
           };
         });
-      })
+      });
+  }
+
+  // send match request
+  async handleMatch(e) {
+    e.persist();
+
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    const id = e.target.value
+    const requestOptions = {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access'),
+      },
+      body: JSON.stringify({ 
+        'reciever_id': id 
+      }),
+    };
+    fetch('api/match/make-match-request', requestOptions)
+      .then(response => {
+        console.log(response);
+      });
   }
 
   render() {
@@ -81,10 +109,10 @@ class Home extends Component {
                 </Card.Content>
                 <Card.Content extra>
                   <div className='ui two buttons'>
-                    <Button basic color='green'>
+                    <Button basic color='green' onClick={this.handleMatch} value={user.id}>
                       Match
                     </Button>
-                    <Button basic color='red'>
+                    <Button basic color='red' value={user.id}>
                       Block
                     </Button>
                   </div>
