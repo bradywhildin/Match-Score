@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .models import MatchRequest, Match
+from .models import MatchRequest, Match, Block
 from django.contrib.auth.models import User
 from rest_framework.response import Response
 from accounts.views import getMatchData
@@ -47,6 +47,18 @@ class getMatches(APIView):
 
         return Response(response)
 
-            
+class block(APIView):
+    def post(self, request):
+        blocker = request.user
+        blockee = User.objects.get(id=request.data['blockee_id'])
+
+        block = Block(blocker=blocker, blockee=blockee)
+        block.save()
+
+        response = {
+            'detail': blocker.username + ' successfully blocked ' + blockee.username,
+        }
+
+        return Response(response)
 
         

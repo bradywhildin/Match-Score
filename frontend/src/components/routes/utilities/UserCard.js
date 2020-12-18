@@ -8,7 +8,7 @@ function CardButtons(props) {
         <Button basic color='green' onClick={props.handleMatch} value={props.id}>
           Match
         </Button>
-        <Button basic color='red' value={props.id}>
+        <Button basic color='red' onClick={props.handleBlock} value={props.id}>
           Block
         </Button>
       </div>
@@ -29,7 +29,7 @@ function UserCard(props) {
         </Card.Description>
       </Card.Content>
       {props.showButtons &&
-        <CardButtons id={props.id} handleMatch={props.handleMatch} />
+        <CardButtons id={props.id} handleMatch={props.handleMatch} handleBlock={props.handleBlock} />
       }
     </Card>
   );

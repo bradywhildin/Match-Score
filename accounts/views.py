@@ -9,7 +9,7 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from rest_framework.parsers import MultiPartParser
 from rest_framework.exceptions import APIException
-from matches.models import MatchRequest, Match
+from matches.models import MatchRequest, Match, Block
 
 class UserCreate(generics.CreateAPIView):
     permission_classes = [AllowAny,]
@@ -64,18 +64,22 @@ class GetUserList(APIView):
         currentUserCoord = (profile.latitude, profile.longitude)
         currentUserMatchRequests = MatchRequest.objects.filter(sender=currentUser)
         currentUserMatches = Match.objects.filter(user1=currentUser) | Match.objects.filter(user2=currentUser)
+        currentUserBlocks = Block.objects.filter(blocker=currentUser) | Block.objects.filter(blockee=currentUser)
+
 
         users = User.objects.all().exclude(id=currentUser.id)
         response = []
         for user in users:
-            # check if user already requested or matched with
+            # check if user already requested or matched with or blocked
             matchRequestMade = currentUserMatchRequests.filter(reciever=user).exists()
             matchMade = (currentUserMatches.filter(user1=user) | currentUserMatches.filter(user2=user)).exists()
+            blockMade = (currentUserBlocks.filter(blocker=user) | currentUserBlocks.filter(blockee=user)).exists()
             
-            if hasattr(user, 'profile') and not (matchRequestMade or matchMade):
+            if hasattr(user, 'profile') and not (matchRequestMade or matchMade or blockMade):
                 response.append(getMatchData(user, currentUserAnswers, currentUserCoord))
 
         response.sort(key=getTotalScore, reverse=True) # sort users from best to worst total score
+
 
         return Response(response)
 

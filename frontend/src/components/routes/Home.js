@@ -26,6 +26,8 @@ class Home extends Component {
 
     this.handleMatch = this.handleMatch.bind(this);
     this.handleResize = this.handleResize.bind(this);
+    this.setUsers = this.setUsers.bind(this);
+    this.handleBlock = this.handleBlock.bind(this);
   }
 
   handleResize() {
@@ -37,15 +39,7 @@ class Home extends Component {
     this.setState({ itemsPerRow : itemsPerRow });
   }
 
-  async componentDidMount() {
-    window.addEventListener('resize', this.handleResize);
-
-    const userLoggedIn = await checkForUser();
-    if (!userLoggedIn) {
-      this.props.history.push('/login');
-      return;
-    };
-
+  setUsers() {
     const requestOptions = {
       headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
     };
@@ -60,6 +54,18 @@ class Home extends Component {
           loaded: true,
         });
       });
+  }
+
+  async componentDidMount() {
+    window.addEventListener('resize', this.handleResize);
+
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    this.setUsers();
   }
 
   // send match request
@@ -87,6 +93,39 @@ class Home extends Component {
       .then(response => {
         console.log(response);
       });
+
+    this.setUsers();
+  }
+
+  // block user
+  async handleBlock(e) {
+    e.persist();
+
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    const id = e.target.value
+    const requestOptions = {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access'),
+      },
+      body: JSON.stringify({ 
+        'blockee_id': id 
+      }),
+    };
+    fetch('api/match/block', requestOptions)
+      .then(response => {
+        console.log(response);
+      });
+
+    console.log(this);
+
+    this.setUsers();
   }
 
   render() {
@@ -106,6 +145,8 @@ class Home extends Component {
                 showButtons={true}
                 id={user.id}
                 handleMatch={this.handleMatch} 
+                handleBlock={this.handleBlock}
+                setUsers={this.setUsers}
               />
             );
           })}
