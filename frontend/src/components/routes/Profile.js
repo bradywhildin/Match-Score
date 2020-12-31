@@ -24,6 +24,7 @@ class Profile extends Component {
       a4: null,
       a5: null,
       message: '',
+      imageUpdated: false,
     };
 
     this.handleChangeImageFile = this.handleChangeImageFile.bind(this);
@@ -73,7 +74,8 @@ class Profile extends Component {
     e.preventDefault();
     this.setState({ 
       imageFile: e.target.files[0],
-      imageUrl: URL.createObjectURL(e.target.files[0]) 
+      imageUrl: URL.createObjectURL(e.target.files[0]),
+      imageUpdated: true,
     });
   }
   handleChangeZip(e) {
@@ -117,24 +119,27 @@ class Profile extends Component {
       method = 'PUT';
       url = 'api/account/update-profile';
       message = 'Your profile has been updated.'
-    }
-    else {
+    } else {
       method = 'POST';
       url = 'api/account/create-profile';
       message = 'Your profile has been created.'
     };
 
     var formData = new FormData();
-    formData.append('image', this.state.imageFile);
     formData.append('zip', this.state.zip);
     formData.append('bio', this.state.bio);
     formData.append('latitude', coord.latitude);
     formData.append('longitude', coord.longitude);
-    formData.append('a1', parseInt(this.state.a1))
-    formData.append('a2', parseInt(this.state.a2))
-    formData.append('a3', parseInt(this.state.a3))
-    formData.append('a4', parseInt(this.state.a4))
-    formData.append('a5', parseInt(this.state.a5))
+    formData.append('a1', parseInt(this.state.a1));
+    formData.append('a2', parseInt(this.state.a2));
+    formData.append('a3', parseInt(this.state.a3));
+    formData.append('a4', parseInt(this.state.a4));
+    formData.append('a5', parseInt(this.state.a5));
+
+    // only upload image if user updated it
+    if (this.state.imageUpdated) {
+      formData.append('image', this.state.imageFile);
+    };
 
     const requestOptions = {
       method: method,

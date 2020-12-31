@@ -110,7 +110,6 @@ class ProfileUpdate(APIView):
     def put(self, request):
         try:
             profile = request.user.profile
-            profile.image = request.data['image']
             profile.bio = request.data['bio']
             profile.zip = request.data['zip']
             profile.latitude = request.data['latitude']
@@ -120,6 +119,10 @@ class ProfileUpdate(APIView):
             profile.a3 = request.data['a3']
             profile.a4 = request.data['a4']
             profile.a5 = request.data['a5']
+
+            if 'image' in request.data:
+                profile.image = request.data['image']
+
             profile.save()
 
             response = {
