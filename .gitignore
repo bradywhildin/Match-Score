@@ -6,6 +6,7 @@ local_settings.py
 db.sqlite3
 media
 env/
+.env
 .coverage
 node_modules/
 **/migrations/
