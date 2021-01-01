@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NavBar from './NavBar';
 import { Card } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
+import checkForProfile from './utilities/checkForProfile';
 import UserCard from './utilities/UserCard'
 
 class Matches extends Component {
@@ -18,6 +19,7 @@ class Matches extends Component {
       loaded: false,
       placeholder: 'Loading',
       itemsPerRow: itemsPerRow,
+      noProfile: false,
     };
 
     this.handleResize = this.handleResize.bind(this);
@@ -41,26 +43,40 @@ class Matches extends Component {
       return;
     };
 
-    const requestOptions = {
-      headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
-    };
-    fetch('api/match/get-matches', requestOptions)
-      .then(response => {
-          return response.json();
-      })
-      .then(data => {
-        console.log(data);
+    // make sure user has profile before trying to show matches
+    checkForProfile().then(hasProfile => {
+      if (hasProfile) {
+        const requestOptions = {
+          headers: { 'Authorization': 'Bearer ' + window.localStorage.getItem('access') }
+        };
+        fetch('api/match/get-matches', requestOptions)
+          .then(response => {
+              return response.json();
+          })
+          .then(data => {
+            console.log(data);
+            this.setState({
+              data: data,
+              loaded: true,
+            });
+          });
+      } else {
         this.setState({
-          data: data,
-          loaded: true,
+          noProfile: true,
         });
-      });
+      };
+    });
   }
 
   render() {
     return (
       <div>
         <NavBar current="matches" loggedIn={true} />
+
+        {this.state.noProfile &&
+          <h4>You must create profile to start matching.</h4>
+        }
+
         <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
           {this.state.data.map(user => {
             return (

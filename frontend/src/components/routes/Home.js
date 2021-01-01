@@ -5,6 +5,7 @@ import 'regenerator-runtime/runtime';
 import { isFuture } from 'date-fns';
 import NavBar from './NavBar';
 import checkForUser from './utilities/checkForUser';
+import checkForProfile from './utilities/checkForProfile';
 import { Card } from 'semantic-ui-react';
 import UserCard from './utilities/UserCard';
 
@@ -22,6 +23,7 @@ class Home extends Component {
       loaded: false,
       placeholder: 'Loading',
       itemsPerRow: itemsPerRow,
+      noProfile: false,
     };
 
     this.handleMatch = this.handleMatch.bind(this);
@@ -56,6 +58,8 @@ class Home extends Component {
       });
   }
 
+
+
   async componentDidMount() {
     window.addEventListener('resize', this.handleResize);
 
@@ -65,7 +69,16 @@ class Home extends Component {
       return;
     };
 
-    this.setUsers();
+    // make sure user has profile before trying to show other users
+    checkForProfile().then(hasProfile => {
+      if (hasProfile) {
+        this.setUsers();
+      } else {
+        this.setState({
+          noProfile: true
+        });
+      }
+    })
   }
 
   // send match request
@@ -132,6 +145,11 @@ class Home extends Component {
     return (
       <div>
         <NavBar current="home" loggedIn={true} />
+
+        {this.state.noProfile &&
+          <h4>You must create profile to start matching.</h4>
+        }
+
         <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
           {this.state.data.map(user => {
             return (
