@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { render } from 'react-dom'
 import { withRouter } from 'react-router-dom'
 import Cookies from 'js-cookie'
-import { Form, Checkbox, TextArea, Header, Divider, Button, Image } from 'semantic-ui-react';
+import { Form, Checkbox, TextArea, Header, Divider, Message } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -25,8 +25,10 @@ class Profile extends Component {
       a5: null,
       message: '',
       imageUpdated: false,
+      invalidInput: false,
     };
 
+    this.fillProfile = this.fillProfile.bind(this);
     this.handleChangeImageFile = this.handleChangeImageFile.bind(this);
     this.handleChangeZip = this.handleChangeZip.bind(this);
     this.handleChangeBio = this.handleChangeBio.bind(this);
@@ -36,11 +38,17 @@ class Profile extends Component {
     this.handleChangeA4 = this.handleChangeA4.bind(this);
     this.handleChangeA5 = this.handleChangeA5.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.validInput = this.validInput.bind(this);
   }
 
   async componentDidMount() {
     if (!(await checkForUser())) this.props.history.push('/login');
     
+    this.fillProfile();
+  }
+
+  // fill out profile with existing details if profile exists
+  fillProfile() {
     const requestOptions = {
       method : 'GET',
       headers: { 
@@ -104,8 +112,19 @@ class Profile extends Component {
     e.preventDefault();
     if (!checkForUser()) this.props.history.push('/login');
 
+    if (!this.validInput()) {
+      this.setState({
+        invalidInput: true,
+      })
+      return;
+    };
+
+    this.setState({
+      invalidInput: false,
+    });
+
     var url = 'api/account/get-coordinates?zip=' + this.state.zip;
-    const response = await fetch(url)
+    const response = await fetch(url);
     if (response.ok) {
       var coord = await response.json();
     } else {
@@ -157,13 +176,28 @@ class Profile extends Component {
       });
   }
 
+  // makes sure all fields are filled out
+  validInput() {
+    if (!(this.state.zip.length > 0 && this.state.bio.length > 0)) {
+      return false;
+    };
+
+    if (!this.state.hasProfile && (!(this.state.a1 != null &&  this.state.a2 != null && this.state.a3 != null && this.state.a4 != null && this.state.a5 != null && this.state.imageFile != null))) {
+      return false
+    } else if (this.state.imageUpdated && this.state.imageFile == null) {
+      return false
+    };
+
+    return true;
+  }
+
   render() {
     return (
       <div>
         <NavBar current="profile" loggedIn={true} />
 
         <div className="userForm">
-          <Form onSubmit={this.handleSubmit}>
+          <Form error onSubmit={this.handleSubmit}>
             <ImageUpload imageFile={this.state.imageFile} imageUrl={this.state.imageUrl} handleChange={this.handleChangeImageFile} />
             <Zip zip={this.state.zip} handleChange={this.handleChangeZip} />
             <Bio bio={this.state.bio} handleChange={this.handleChangeBio} />
@@ -178,6 +212,14 @@ class Profile extends Component {
             <Divider />
             <Q5 a={this.state.a5} handleChange={this.handleChangeA5} />
             <Divider />
+
+            {this.state.invalidInput && 
+              <Message
+                error
+                header="Please choose picture and fill out all fields"
+              />
+            }
+
             <Form.Button className="formSubmit">Save</Form.Button>
           </Form>
 
