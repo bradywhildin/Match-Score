@@ -50,8 +50,7 @@ class LoginForm extends Component {
             password: '',
             incorrectInput: true,
           });
-          document.getElementsByClassName('userForm').form
-          throw new Error('Wrong Email/Password');
+          throw new Error('Wrong Username/Password');
         };
         return response.json();
       })
