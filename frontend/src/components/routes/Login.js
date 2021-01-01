@@ -4,14 +4,15 @@ import { withRouter } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { add } from 'date-fns'
 import NavBar from './NavBar';
-import { Form, Checkbox, TextArea, Header, Divider } from 'semantic-ui-react';
+import { Form, Message } from 'semantic-ui-react';
 
 class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
+      incorrectInput: false,
     };
 
     this.handleChangeUsername = this.handleChangeUsername.bind(this);
@@ -40,10 +41,16 @@ class LoginForm extends Component {
         password: this.state.password
       })
     };
+
     fetch('api/token/', requestOptions)
       .then(response => {
-        if (response.status > 400) {
-          alert('Wrong email/password')
+        if (response.status >= 400) {
+          this.setState({
+            username: '',
+            password: '',
+            incorrectInput: true,
+          });
+          document.getElementsByClassName('userForm').form
           throw new Error('Wrong Email/Password');
         };
         return response.json();
@@ -62,9 +69,18 @@ class LoginForm extends Component {
 
   render() {
     return (
-      <Form onSubmit={this.handleSubmit} className="userForm">
-        <Form.Input label="Username" onChange={this.handleChangeUsername} />
-        <Form.Input label="Password" onChange={this.handleChangePassword} type="password" />
+      <Form error onSubmit={this.handleSubmit} className="userForm">
+        <Form.Input label="Username" value={this.state.username} onChange={this.handleChangeUsername} />
+        <Form.Input label="Password" value={this.state.password} onChange={this.handleChangePassword} type="password" />
+
+        {this.state.incorrectInput && 
+          <Message
+            error
+            header="Incorrect Username/Password"
+            content="Try again."
+          />
+        }
+
         <Form.Button className="formSubmit">Login</Form.Button>
       </Form>
     )
