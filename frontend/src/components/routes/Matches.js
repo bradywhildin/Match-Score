@@ -20,6 +20,7 @@ class Matches extends Component {
       placeholder: 'Loading',
       itemsPerRow: itemsPerRow,
       noProfile: false,
+      noMatches: true,
     };
 
     this.handleResize = this.handleResize.bind(this);
@@ -59,6 +60,12 @@ class Matches extends Component {
               data: data,
               loaded: true,
             });
+
+            if (data.length == 0) { // let user know if they don't have any matches
+              this.setState({
+                noMatches: true,
+              });
+            };
           });
       } else {
         this.setState({
@@ -75,6 +82,10 @@ class Matches extends Component {
 
         {this.state.noProfile &&
           <h4>You must create profile to start matching.</h4>
+        }
+
+        {this.state.noMatches &&
+          <h4>You don't have any matches yet.</h4>
         }
 
         <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
