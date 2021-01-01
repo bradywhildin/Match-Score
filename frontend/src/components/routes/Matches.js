@@ -20,7 +20,7 @@ class Matches extends Component {
       placeholder: 'Loading',
       itemsPerRow: itemsPerRow,
       noProfile: false,
-      noMatches: true,
+      noMatches: false,
     };
 
     this.handleResize = this.handleResize.bind(this);
