@@ -9,3 +9,4 @@ env/
 .coverage
 node_modules/
 **/migrations/
+frontend/static/
