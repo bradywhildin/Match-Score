@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'accounts',
     'frontend',
     'matches',
+    'chat',
 ]
 
 REST_FRAMEWORK = {
