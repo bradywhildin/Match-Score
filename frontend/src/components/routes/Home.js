@@ -58,8 +58,6 @@ class Home extends Component {
       });
   }
 
-
-
   async componentDidMount() {
     window.addEventListener('resize', this.handleResize);
 

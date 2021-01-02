@@ -15,7 +15,7 @@ class Matches extends Component {
     else itemsPerRow = 1;
 
     this.state = {
-      data: [],
+      userData: [],
       loaded: false,
       placeholder: 'Loading',
       itemsPerRow: itemsPerRow,
@@ -57,14 +57,13 @@ class Matches extends Component {
           .then(response => {
               return response.json();
           })
-          .then(data => {
-            console.log(data);
+          .then(userData => {
             this.setState({
-              data: data,
+              userData: userData,
               loaded: true,
             });
 
-            if (data.length == 0) { // let user know if they don't have any matches
+            if (userData.length == 0) { // let user know if they don't have any matches
               this.setState({
                 noMatches: true,
               });
@@ -108,7 +107,7 @@ class Matches extends Component {
 
         {!this.state.chatMode &&
           <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
-            {this.state.data.map(user => {
+            {this.state.userData.map(user => {
               return (
                 <UserCard 
                   key={user.id} 
@@ -136,12 +135,63 @@ class Matches extends Component {
   }
 }
 
+
 class Chat extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      chatData: [],
+    }
+
+    this.setMessages = this.setMessages.bind(this);
+  }
+
+  async componentDidMount() {
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    this.setMessages();
+  }
+
+  async setMessages() {
+    const requestOptions = {
+      method: 'GET',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access'),
+      }
+    };
+
+    const url = 'api/chat/get-messages?match_id=' + this.props.matchId;
+
+    fetch(url, requestOptions)
+      .then(response => {
+        return response.json();
+      })
+      .then(chatData => {
+        console.log(chatData);
+        this.setState({
+          chatData: chatData
+        });
+      });
+  }
+
   render() {
     return (
-      <p>{this.props.matchId}</p>
-    )
+      <ul>
+        {this.state.chatData.map(message => {
+            return (
+              <li key={message.id}>{message.content} - {message.author.name} - {message.time}</li>
+            );
+          })}
+      </ul>
+    );
   }
 }
+
 
 export default Matches;
