@@ -24,7 +24,7 @@ class ProfileCreate(generics.CreateAPIView):
         serializer.save(user=self.request.user)
 
 # calculate match score and total score and put together data to be displayed
-def getMatchData(user, currentUserAnswers, currentUserCoord):
+def getMatchData(user, currentUserAnswers, currentUserCoord, matchId=None):
     matchScore = 20
     profile = user.profile
     userAnswers = [profile.a1, profile.a2, profile.a3, profile.a4, profile.a5]
@@ -50,6 +50,10 @@ def getMatchData(user, currentUserAnswers, currentUserCoord):
         'image': profile.image.url,
         'total_score': totalScore,
     }
+    
+    # if matchId parameter given, add to json
+    if matchId:
+        data['match_id'] = matchId
 
     return data
 

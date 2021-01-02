@@ -43,7 +43,7 @@ class getMatches(APIView):
                 user = match.user2
             else:
                 user = match.user1
-            response.append(getMatchData(user, currentUserAnswers, currentUserCoord))
+            response.append(getMatchData(user, currentUserAnswers, currentUserCoord, match.id))
 
         return Response(response)
 

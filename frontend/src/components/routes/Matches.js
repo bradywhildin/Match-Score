@@ -22,7 +22,7 @@ class Matches extends Component {
       noProfile: false,
       noMatches: false,
       chatMode: false,
-      chatRecieverId: null,
+      matchId: null,
     };
 
     this.handleResize = this.handleResize.bind(this);
@@ -89,7 +89,7 @@ class Matches extends Component {
 
     this.setState({
       chatMode: true,
-      chatRecieverId: e.target.value,
+      matchId: e.target.value,
     });
   }
 
@@ -117,6 +117,7 @@ class Matches extends Component {
                   matchScore={user.match_score} 
                   distance={user.distance} 
                   bio={user.bio}
+                  id={user.match_id}
                   showMatchButtons={false}
                   showChatButton={true}
                   handleChat={this.handleChat}
@@ -127,7 +128,7 @@ class Matches extends Component {
         }
 
         {this.state.chatMode &&
-          <Chat recieverId={this.state.recieverId} />
+          <Chat matchId={this.state.matchId} />
         }
 
       </div>
@@ -138,7 +139,7 @@ class Matches extends Component {
 class Chat extends Component {
   render() {
     return (
-      <p>some chat</p>
+      <p>{this.props.matchId}</p>
     )
   }
 }
