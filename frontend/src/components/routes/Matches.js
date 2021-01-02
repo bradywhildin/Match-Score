@@ -21,9 +21,12 @@ class Matches extends Component {
       itemsPerRow: itemsPerRow,
       noProfile: false,
       noMatches: false,
+      chatMode: false,
+      chatRecieverId: null,
     };
 
     this.handleResize = this.handleResize.bind(this);
+    this.handleChat = this.handleChat.bind(this);
   }
 
   handleResize() {
@@ -75,6 +78,21 @@ class Matches extends Component {
     });
   }
 
+  async handleChat(e) {
+    e.persist();
+
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    this.setState({
+      chatMode: true,
+      chatRecieverId: e.target.value,
+    });
+  }
+
   render() {
     return (
       <div>
@@ -88,23 +106,40 @@ class Matches extends Component {
           <h4>You don't have any matches yet.</h4>
         }
 
-        <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
-          {this.state.data.map(user => {
-            return (
-              <UserCard 
-                key={user.id} 
-                image={user.image} 
-                firstName={user.first_name}
-                matchScore={user.match_score} 
-                distance={user.distance} 
-                bio={user.bio}
-                showButtons={false}
-              />
-            );
-          })}
-        </Card.Group>
+        {!this.state.chatMode &&
+          <Card.Group id="cardGroup" itemsPerRow={this.state.itemsPerRow} centered={true}>
+            {this.state.data.map(user => {
+              return (
+                <UserCard 
+                  key={user.id} 
+                  image={user.image} 
+                  firstName={user.first_name}
+                  matchScore={user.match_score} 
+                  distance={user.distance} 
+                  bio={user.bio}
+                  showMatchButtons={false}
+                  showChatButton={true}
+                  handleChat={this.handleChat}
+                />
+              );
+            })}
+          </Card.Group>
+        }
+
+        {this.state.chatMode &&
+          <Chat recieverId={this.state.recieverId} />
+        }
+
       </div>
     );
+  }
+}
+
+class Chat extends Component {
+  render() {
+    return (
+      <p>some chat</p>
+    )
   }
 }
 

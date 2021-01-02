@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Button, Image } from 'semantic-ui-react';
 
-function CardButtons(props) {
+function MatchButtons(props) {
   return (
     <Card.Content extra>
       <div className='ui two buttons'>
@@ -10,6 +10,18 @@ function CardButtons(props) {
         </Button>
         <Button basic color='red' onClick={props.handleBlock} value={props.id}>
           Block
+        </Button>
+      </div>
+    </Card.Content>
+  );
+}
+
+function ChatButton(props) {
+  return (
+    <Card.Content extra>
+      <div className='ui two buttons'>
+        <Button basic color='blue' onClick={props.handleChat} value={props.id}>
+          Chat
         </Button>
       </div>
     </Card.Content>
@@ -28,8 +40,13 @@ function UserCard(props) {
           {props.bio}
         </Card.Description>
       </Card.Content>
-      {props.showButtons &&
-        <CardButtons id={props.id} handleMatch={props.handleMatch} handleBlock={props.handleBlock} />
+
+      {props.showMatchButtons &&
+        <MatchButtons id={props.id} handleMatch={props.handleMatch} handleBlock={props.handleBlock} />
+      }
+
+      {props.showChatButton && 
+        <ChatButton id={props.id} handleChat={props.handleChat} />
       }
     </Card>
   );

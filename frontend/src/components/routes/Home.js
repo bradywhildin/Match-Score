@@ -91,7 +91,7 @@ class Home extends Component {
       return;
     };
 
-    const id = e.target.value
+    const id = e.target.value;
     const requestOptions = {
       method: 'POST',
       headers: { 
@@ -160,7 +160,8 @@ class Home extends Component {
                 matchScore={user.match_score} 
                 distance={user.distance} 
                 bio={user.bio}
-                showButtons={true}
+                showMatchButtons={true}
+                showChatButton={false}
                 id={user.id}
                 handleMatch={this.handleMatch} 
                 handleBlock={this.handleBlock}
