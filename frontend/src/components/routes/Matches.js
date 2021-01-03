@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
-import { Card, Button } from 'semantic-ui-react';
+import { Card, Button, Form } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import checkForProfile from './utilities/checkForProfile';
 import UserCard from './utilities/UserCard'
@@ -150,9 +150,12 @@ class Chat extends Component {
 
     this.state = {
       chatData: [],
+      newMessageContent: '',
     }
 
     this.setMessages = this.setMessages.bind(this);
+    this.handleChangeMessage = this.handleChangeMessage.bind(this);
+    this.handleMessageSend = this.handleMessageSend.bind(this);
   }
 
   async componentDidMount() {
@@ -188,12 +191,46 @@ class Chat extends Component {
       });
   }
 
+  handleChangeMessage(e, {value}) {
+    this.setState({ newMessageContent: {value}.value });
+  }
+
+  async handleMessageSend() {
+    const userLoggedIn = await checkForUser();
+    if (!userLoggedIn) {
+      this.props.history.push('/login');
+      return;
+    };
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + window.localStorage.getItem('access'),
+      },
+      body: JSON.stringify({ 
+        'content': this.state.newMessageContent,
+        'match_id': this.props.matchId,
+      }),
+    };
+    fetch('api/chat/add-message', requestOptions)
+      .then(response => {
+        console.log(response);
+
+        this.setState({
+          newMessageContent: '',
+        });
+        this.setMessages();
+      });
+  }
+
   render() {
     return (
       <>
         <Button basic color='blue' onClick={this.props.returnToMatches}>
           Return to matches
         </Button>
+
         <ul>
           {this.state.chatData.map(message => {
               return (
@@ -201,6 +238,11 @@ class Chat extends Component {
               );
             })}
         </ul>
+
+        <Form onSubmit={this.handleMessageSend}>
+          <Form.Input label="New Message" value={this.state.newMessageContent} onChange={this.handleChangeMessage} />
+          <Form.Button className="formSubmit">Send</Form.Button>
+        </Form>
       </>
     );
   }
