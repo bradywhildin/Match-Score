@@ -6,14 +6,6 @@ body {
   margin: 0 15px;
 }
 
-.userForm {
-  margin: 0 auto;
-  margin-bottom: 15px;
-  width: 50%;
-  display: block;
-  border-style: none;
-}
-
 #zip {
   margin: 15px;
 }
@@ -39,20 +31,50 @@ body {
   width: auto;
 }
 
-@media screen and (min-width: 500px) {
+@media screen and (min-width: 200px) {
   #cardGroup {
-    width: 500px;
+    width: 75%;
+  }
+
+  .userForm {
+    margin: 0 auto;
+    margin-bottom: 15px;
+    width: 85%;
+    display: block;
+    border-style: none;
+  }
+}
+
+@media screen and (min-width: 750px) {
+  #cardGroup {
+    width: 450px;
   }
 }
 
 @media screen and (min-width: 1000px) {
   #cardGroup {
-    width: 1000px;
+    width: 900px;
+  }
+
+  .userForm {
+    margin: 0 auto;
+    margin-bottom: 15px;
+    width: 75%;
+    display: block;
+    border-style: none;
   }
 }
 
 @media screen and (min-width: 1400px) {
   .navDiv {
     margin: 15px 100px;
+  }
+
+  .userForm {
+    margin: 0 auto;
+    margin-bottom: 15px;
+    width: 50%;
+    display: block;
+    border-style: none;
   }
 }
