@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
-import { Card } from 'semantic-ui-react';
+import { Card, Button } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import checkForProfile from './utilities/checkForProfile';
 import UserCard from './utilities/UserCard'
@@ -27,6 +27,7 @@ class Matches extends Component {
 
     this.handleResize = this.handleResize.bind(this);
     this.handleChat = this.handleChat.bind(this);
+    this.returnToMatches = this.returnToMatches.bind(this);
   }
 
   handleResize() {
@@ -92,6 +93,13 @@ class Matches extends Component {
     });
   }
 
+  returnToMatches() {
+    this.setState({
+      chatMode: false,
+      matchId: null,
+    })
+  }
+
   render() {
     return (
       <div>
@@ -127,7 +135,7 @@ class Matches extends Component {
         }
 
         {this.state.chatMode &&
-          <Chat matchId={this.state.matchId} />
+          <Chat matchId={this.state.matchId} returnToMatches={this.returnToMatches} />
         }
 
       </div>
@@ -182,13 +190,18 @@ class Chat extends Component {
 
   render() {
     return (
-      <ul>
-        {this.state.chatData.map(message => {
-            return (
-              <li key={message.id}>{message.content} - {message.author.name} - {message.time}</li>
-            );
-          })}
-      </ul>
+      <>
+        <Button basic color='blue' onClick={this.props.returnToMatches}>
+          Return to matches
+        </Button>
+        <ul>
+          {this.state.chatData.map(message => {
+              return (
+                <li key={message.id}>{message.content} - {message.author.name} - {message.time}</li>
+              );
+            })}
+        </ul>
+      </>
     );
   }
 }
