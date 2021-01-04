@@ -144,3 +144,5 @@ STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/' # 'http://myhost:port/media/'
+
+STATIC_ROOT = '/home/matchscore/Match-Score/static'
