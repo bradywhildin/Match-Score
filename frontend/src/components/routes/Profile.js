@@ -25,7 +25,7 @@ class Profile extends Component {
       a5: null,
       message: '',
       imageUpdated: false,
-      invalidInput: false,
+      validInput: null,
     };
 
     this.fillProfile = this.fillProfile.bind(this);
@@ -114,14 +114,10 @@ class Profile extends Component {
 
     if (!this.validInput()) {
       this.setState({
-        invalidInput: true,
-      })
+        validInput: false,
+      });
       return;
     };
-
-    this.setState({
-      invalidInput: false,
-    });
 
     var url = 'api/account/get-coordinates?zip=' + this.state.zip;
     const response = await fetch(url);
@@ -171,8 +167,9 @@ class Profile extends Component {
     fetch(url, requestOptions)
       .then(() => {
         this.setState({
-          message: message
-        })
+          message: message,
+          validInput: true,
+        });
       });
   }
 
@@ -213,7 +210,14 @@ class Profile extends Component {
             <Q5 a={this.state.a5} handleChange={this.handleChangeA5} />
             <Divider />
 
-            {this.state.invalidInput && 
+            {this.state.validInput == true && 
+              <Message
+                positive
+                header={this.state.message}
+              />
+            }
+
+            {this.state.validInput == false && 
               <Message
                 error
                 header="Please choose picture and fill out all fields"
@@ -222,8 +226,6 @@ class Profile extends Component {
 
             <Form.Button className="formSubmit">Save</Form.Button>
           </Form>
-
-          <p>{this.state.message}</p>
         </div>
       </div>
     )
