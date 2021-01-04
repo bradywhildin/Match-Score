@@ -59,7 +59,7 @@ class LoginForm extends Component {
         window.localStorage.setItem('access', data.access);
         window.localStorage.setItem('refresh', data.refresh);
         window.localStorage.setItem('expiration', expiration)
-        this.props.history.push('/home');
+        this.props.history.push('/');
       })
       .catch(e => {
         console.log('Error:', e);

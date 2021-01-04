@@ -18,9 +18,9 @@ function App() {
           <Switch>
             <Route path="/create-account" component={CreateAccount} />
             <Route path="/login" component={Login} />
-            <Route path="/home" component={Home} />
             <Route path="/profile" component={Profile} />
             <Route path="/matches" component={Matches} />
+            <Route path="/" component={Home} />
           </Switch>
       </Router>
     </>

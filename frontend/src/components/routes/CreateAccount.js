@@ -103,7 +103,7 @@ class CreateAccountForm extends Component {
         console.log(data);
         window.localStorage.setItem('access', data.access);
         window.localStorage.setItem('refresh', data.refresh);
-        this.props.history.push('/home');
+        this.props.history.push('/');
       });
   }
 
