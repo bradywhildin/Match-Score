@@ -8,4 +8,5 @@ urlpatterns = [
     path('create-user', views.UserCreate.as_view()),
     path('check-user-profile', views.CheckUserProfile.as_view()),
     path('get-coordinates', views.ZipToCoord.as_view()),
+    path('get-user-id', views.getUserId.as_view()),
 ]

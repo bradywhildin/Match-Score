@@ -148,3 +148,10 @@ class ZipToCoord(APIView):
             'longitude': location.longitude,
         }
         return Response(response)
+
+class getUserId(APIView):
+    def get(self, request):
+        response = {
+            'id': request.user.id
+        }
+        return Response(response)
