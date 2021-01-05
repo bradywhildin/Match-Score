@@ -3,6 +3,7 @@ from .models import Message
 from rest_framework.views import APIView
 from matches.models import Match
 from rest_framework.response import Response
+from django.utils import timezone
 
 class getMessages(APIView):
     def get(self, request):
@@ -19,7 +20,7 @@ class getMessages(APIView):
                 },
                 'content': message.content,
                 'id': message.id,
-                'time': message.time,
+                'time': timezone.localtime(message.time),
             })
 
         return Response(response)
