@@ -268,7 +268,7 @@ class Chat extends Component {
   render() {
     return (
       <div className="chat">
-        <Button basic color='blue' onClick={this.props.returnToMatches}>
+        <Button basic color="blue" onClick={this.props.returnToMatches} id="returnToMatchesButton">
           Return to matches
         </Button>
 

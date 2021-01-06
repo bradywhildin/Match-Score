@@ -39,6 +39,10 @@ body {
   overflow: scroll;
 }
 
+#returnToMatchesButton {
+  margin-bottom: 10px;
+}
+
 @media screen and (min-width: 200px) {
   #cardGroup {
     width: 75%;
@@ -105,7 +109,7 @@ body {
   }
 }
 
-@media screen and (min-height: 600px) {
+@media screen and (min-height: 650px) {
   .scrollable {
     height: 350px;
   }
