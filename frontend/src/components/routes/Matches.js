@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
-import { Card, Button, Form, Comment, Header } from 'semantic-ui-react';
+import { Card, Button, Form, Comment, Header, Image } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import checkForProfile from './utilities/checkForProfile';
 import UserCard from './utilities/UserCard'
@@ -25,8 +25,8 @@ class Matches extends Component {
       noMatches: false,
       chatMode: false,
       matchId: null,
-      matchPic: null,
-      userId: null,
+      matchImage: null,
+      matchName: null,
     };
 
     this.handleResize = this.handleResize.bind(this);
@@ -94,6 +94,8 @@ class Matches extends Component {
     this.setState({
       chatMode: true,
       matchId: e.target.value,
+      matchImage: e.target.getAttribute('image'),
+      matchName: e.target.name,
     });
   }
 
@@ -101,6 +103,8 @@ class Matches extends Component {
     this.setState({
       chatMode: false,
       matchId: null,
+      matchImage: null,
+      matchName: null,
     })
   }
 
@@ -139,7 +143,7 @@ class Matches extends Component {
         }
 
         {this.state.chatMode &&
-          <Chat matchId={this.state.matchId} returnToMatches={this.returnToMatches} />
+          <Chat matchId={this.state.matchId} matchImage={this.state.matchImage} matchName={this.state.matchName} returnToMatches={this.returnToMatches} />
         }
 
       </div>
@@ -271,6 +275,11 @@ class Chat extends Component {
         <Button basic color="blue" onClick={this.props.returnToMatches} id="returnToMatchesButton">
           Return to matches
         </Button>
+
+        <Header as='h1' textAlign="center">
+          <Image circular src={this.props.matchImage} /> 
+          {this.props.matchName}
+        </Header>
 
         <div className="scrollable" id="messages">
           <ChatFeed

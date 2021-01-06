@@ -20,7 +20,7 @@ function ChatButton(props) {
   return (
     <Card.Content extra>
       <div className='ui two buttons'>
-        <Button basic color='blue' onClick={props.handleChat} value={props.id}>
+        <Button basic color='blue' onClick={props.handleChat} value={props.id} image={props.image} name={props.name} >
           Chat
         </Button>
       </div>
@@ -46,7 +46,7 @@ function UserCard(props) {
       }
 
       {props.showChatButton && 
-        <ChatButton id={props.id} handleChat={props.handleChat} />
+        <ChatButton id={props.id} handleChat={props.handleChat} image={props.image} name={props.firstName} />
       }
     </Card>
   );
