@@ -159,6 +159,7 @@ class Chat extends Component {
       userId: null,
     }
 
+    this.scrollToBottom = this.scrollToBottom.bind(this);
     this.setMessages = this.setMessages.bind(this);
     this.handleChangeMessage = this.handleChangeMessage.bind(this);
     this.handleMessageSend = this.handleMessageSend.bind(this);
@@ -166,14 +167,26 @@ class Chat extends Component {
 
   async componentDidMount() {
     getUserId().then(userId => {
-      console.log(userId);
       this.setState({
         userId: userId,
       });
       this.setMessages();
+
+      this.scrollToBottom();
     })
   }
 
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+  // scroll to bottom of chat messages
+  scrollToBottom() {
+    var messages = document.getElementById('messages');
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  // get messages from backend and put in state
   async setMessages() {
     const requestOptions = {
       method: 'GET',
@@ -197,8 +210,6 @@ class Chat extends Component {
 
         chatData.forEach(message => {
           let id;
-
-          console.log(message.author.id, this.state.userId)
 
           // figure out if message is from current user; id is 0 if yes, 1 if no
           if (message.author.id == this.state.userId) {
@@ -247,8 +258,6 @@ class Chat extends Component {
     };
     fetch('api/chat/add-message', requestOptions)
       .then(response => {
-        console.log(response);
-
         this.setState({
           newMessageContent: '',
         });
@@ -258,36 +267,38 @@ class Chat extends Component {
 
   render() {
     return (
-      <div class="chat">
+      <div className="chat">
         <Button basic color='blue' onClick={this.props.returnToMatches}>
           Return to matches
         </Button>
 
-        <ChatFeed
-          messages={this.state.messages} // Array: list of message objects
-          isTyping={this.state.is_typing} // Boolean: is the recipient typing
-          hasInputField={false} // Boolean: use our input, or use your own
-          showSenderName // show the name of the user who sent the message
-          bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
-          // JSON: Custom bubble styles
-          bubbleStyles={
-            {
-              text: {
-                fontSize: 20
-              },
-              chatbubble: {
-                borderRadius: 30,
-                padding: 10
+        <div className="scrollable" id="messages">
+          <ChatFeed
+            messages={this.state.messages} // Array: list of message objects
+            isTyping={false}
+            hasInputField={false}
+            showSenderName // show the name of the user who sent the message
+            bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
+            // JSON: Custom bubble styles
+            bubbleStyles={
+              {
+                text: {
+                  fontSize: 20
+                },
+                chatbubble: {
+                  borderRadius: 30,
+                  padding: 10
+                }
               }
             }
-          }
-        />
+          />
+        </div>
 
         <Form onSubmit={this.handleMessageSend}>
           <Form.Input label="New Message" value={this.state.newMessageContent} onChange={this.handleChangeMessage} />
           <Form.Button className="formSubmit">Send</Form.Button>
         </Form>
-      </div>
+    </div>
     );
   }
 }

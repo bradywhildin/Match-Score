@@ -35,6 +35,10 @@ body {
   margin: 0 auto;
 }
 
+.scrollable {
+  overflow: scroll;
+}
+
 @media screen and (min-width: 200px) {
   #cardGroup {
     width: 75%;
@@ -93,5 +97,34 @@ body {
     display: block;
     border-style: none;
   }
-  
+}
+
+@media screen and (min-height: 350px) {
+  .scrollable {
+    height: 300px;
+  }
+}
+
+@media screen and (min-height: 600px) {
+  .scrollable {
+    height: 350px;
+  }
+}
+
+@media screen and (min-height: 700px) {
+  .scrollable {
+    height: 400px;
+  }
+}
+
+@media screen and (min-height: 800px) {
+  .scrollable {
+    height: 490px;
+  }
+}
+
+@media screen and (min-height: 900px) {
+  .scrollable {
+    height: 650px;
+  }
 }
