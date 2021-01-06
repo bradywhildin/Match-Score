@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import NavBar from './NavBar';
-import { Card, Button, Form } from 'semantic-ui-react';
+import { Card, Button, Form, Comment, Header } from 'semantic-ui-react';
 import checkForUser from './utilities/checkForUser';
 import checkForProfile from './utilities/checkForProfile';
 import UserCard from './utilities/UserCard'
+import { ChatFeed, Message } from 'react-chat-ui'
+import getUserId from './utilities/getUserId';
 
 class Matches extends Component {
   constructor(props) {
@@ -23,6 +25,8 @@ class Matches extends Component {
       noMatches: false,
       chatMode: false,
       matchId: null,
+      matchPic: null,
+      userId: null,
     };
 
     this.handleResize = this.handleResize.bind(this);
@@ -151,6 +155,8 @@ class Chat extends Component {
     this.state = {
       chatData: [],
       newMessageContent: '',
+      messages: [],
+      userId: null,
     }
 
     this.setMessages = this.setMessages.bind(this);
@@ -159,13 +165,13 @@ class Chat extends Component {
   }
 
   async componentDidMount() {
-    const userLoggedIn = await checkForUser();
-    if (!userLoggedIn) {
-      this.props.history.push('/login');
-      return;
-    };
-
-    this.setMessages();
+    getUserId().then(userId => {
+      console.log(userId);
+      this.setState({
+        userId: userId,
+      });
+      this.setMessages();
+    })
   }
 
   async setMessages() {
@@ -184,9 +190,35 @@ class Chat extends Component {
         return response.json();
       })
       .then(chatData => {
-        console.log(chatData);
+        // reset messages to empty list
         this.setState({
-          chatData: chatData
+          messages: [],
+        })
+
+        chatData.forEach(message => {
+          let id;
+
+          console.log(message.author.id, this.state.userId)
+
+          // figure out if message is from current user; id is 0 if yes, 1 if no
+          if (message.author.id == this.state.userId) {
+            id = 0;
+          } else {
+            id = 1;
+          }
+
+          let messages = [...this.state.messages];
+          messages.push(
+            new Message({
+              id: id,
+              message: message.content,
+              senderName: message.author.name,
+            })
+          );
+
+          this.setState({
+            messages: messages
+          });
         });
       });
   }
@@ -226,24 +258,36 @@ class Chat extends Component {
 
   render() {
     return (
-      <>
+      <div class="chat">
         <Button basic color='blue' onClick={this.props.returnToMatches}>
           Return to matches
         </Button>
 
-        <ul>
-          {this.state.chatData.map(message => {
-              return (
-                <li key={message.id}>{message.content} - {message.author.name} - {message.time}</li>
-              );
-            })}
-        </ul>
+        <ChatFeed
+          messages={this.state.messages} // Array: list of message objects
+          isTyping={this.state.is_typing} // Boolean: is the recipient typing
+          hasInputField={false} // Boolean: use our input, or use your own
+          showSenderName // show the name of the user who sent the message
+          bubblesCentered={false} //Boolean should the bubbles be centered in the feed?
+          // JSON: Custom bubble styles
+          bubbleStyles={
+            {
+              text: {
+                fontSize: 20
+              },
+              chatbubble: {
+                borderRadius: 30,
+                padding: 10
+              }
+            }
+          }
+        />
 
         <Form onSubmit={this.handleMessageSend}>
           <Form.Input label="New Message" value={this.state.newMessageContent} onChange={this.handleChangeMessage} />
           <Form.Button className="formSubmit">Send</Form.Button>
         </Form>
-      </>
+      </div>
     );
   }
 }

@@ -31,6 +31,10 @@ body {
   width: auto;
 }
 
+.chat {
+  margin: 0 auto;
+}
+
 @media screen and (min-width: 200px) {
   #cardGroup {
     width: 75%;
@@ -43,11 +47,19 @@ body {
     display: block;
     border-style: none;
   }
+
+  .chat {
+    width: 95%;
+  }
 }
 
 @media screen and (min-width: 750px) {
   #cardGroup {
     width: 450px;
+  }
+
+  .chat {
+    width: 75%;
   }
 }
 
@@ -63,6 +75,10 @@ body {
     display: block;
     border-style: none;
   }
+
+  .chat {
+    width: 50%;
+  }
 }
 
 @media screen and (min-width: 1400px) {
@@ -77,4 +93,5 @@ body {
     display: block;
     border-style: none;
   }
+  
 }
