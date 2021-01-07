@@ -292,7 +292,7 @@ class Chat extends Component {
             bubbleStyles={
               {
                 text: {
-                  fontSize: 20
+                  fontSize: 15
                 },
                 chatbubble: {
                   borderRadius: 30,
